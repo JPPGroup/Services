@@ -1,0 +1,16 @@
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: pdfdiff-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`jppcluster`) && PathPrefix(`/api/difference`)
+      services:
+        - kind: Service
+          name: pdfdiff
+          namespace: default
+          port: 80

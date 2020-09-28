@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: "1.0"
+description: Production version for JPP Group cluster installed locally on k3s
+name: local-cluster
+version: 0.1.1
+dependencies:
+- name: rabbitmq  
+  version: "~7.3.0"
+  repository: "https://charts.bitnami.com/bitnami"
+- name: traefik  
+  version: "~8.7.0"
+  repository: "https://containous.github.io/traefik-helm-chart"

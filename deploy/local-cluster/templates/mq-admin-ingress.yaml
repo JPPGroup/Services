@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{- printf " %s-mq-admin-ingress" .Release.Name }}
+  namespace: default
+spec:
+  routes:                           
+  - kind: Rule
+    match: PathPrefix(`/mqadmin/`)        
+    services:                       
+    - kind: Service
+      name: {{- printf " %s-rabbitmq" .Release.Name }}
+      namespace: default      
+      port: 15672      

@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: {{- printf " %s-mq-tcpingress" .Release.Name }}
+  namespace: default
+spec:
+  entryPoints:                  
+    - amqp
+  routes:                      
+  - match: HostSNI(`*`)        
+    services:                  
+    - name: {{- printf " %s-rabbitmq" .Release.Name }}                 
+      port: 5672                     
