@@ -4,7 +4,7 @@
         new L.LatLng(60.894042, 1.790425));*/
     var mapMinZoom = 1;
     var mapMaxZoom = 18;
-    var map = L.map('mapid').setView([55.37329, -3.001326], 4);
+    window.map = L.map('mapid').setView([55.37329, -3.001326], 4);
 
     var osm = L.tileLayer('http://10.10.1.27/mapping/osm/tile/{z}/{x}/{y}.png',
         {
@@ -71,9 +71,15 @@
         "Flood Zone 3": fz3
     };
 
-    L.control.layers(basemaps, overlayMaps).addTo(map);
-    L.control.scale().addTo(map);
+    L.control.layers(basemaps, overlayMaps).addTo(window.map);
+    L.control.scale().addTo(window.map);
 
+    return true;
+}
+
+function setLocation(latitude, longitude, zoom) {
+    window.map.flyTo([latitude, longitude], zoom);
+    var marker = L.marker([latitude, longitude]).addTo(window.map);
     return true;
 }
 
