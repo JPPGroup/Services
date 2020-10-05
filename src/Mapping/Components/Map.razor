@@ -1,0 +1,33 @@
+﻿@using Mapping.Data
+@inject IJSRuntime runtime
+@inject MapLayerService mapLayers
+
+<div id="mapid" style="height: 100%; min-height: 800px"></div>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await runtime.InvokeAsync<bool>("initMap", null);
+
+            foreach (MapTilleLayer mtl in mapLayers.GetTileLayers())
+            {
+                RegisterLayer(mtl);
+            }
+
+            SetLayerState("", true);
+        }
+    }
+
+    public async void RegisterLayer(MapLayer layer)
+    {
+        await runtime.InvokeAsync<bool>("registerLayer", layer);
+    }
+
+    public async void SetLayerState(string layerName, bool active)
+    {
+        await runtime.InvokeAsync<bool>("registerLayer", layerName, active);
+    }
+}

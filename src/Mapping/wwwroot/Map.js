@@ -1,18 +1,13 @@
-﻿function initMap() {
+﻿var layers = [];
+var mapMinZoom = 1;
+var mapMaxZoom = 18;
+
+function initMap() {
     /*var mapBounds = new L.LatLngBounds(
         new L.LatLng(49.852539, -7.793077),
         new L.LatLng(60.894042, 1.790425));*/
-    var mapMinZoom = 1;
-    var mapMaxZoom = 18;
+    
     window.map = L.map('mapid').setView([55.37329, -3.001326], 4);
-
-    var osm = L.tileLayer('http://10.10.1.27/mapping/osm/tile/{z}/{x}/{y}.png',
-        {
-            minZoom: mapMinZoom,
-            maxZoom: mapMaxZoom,
-            //bounds: mapBounds,
-            attribution: 'OSM Street Maps Data',
-        }).addTo(map);
 
     var otm = L.tileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png ',
         {
@@ -58,20 +53,6 @@
                 'EA Flood Map for Planning - Flood Zone 3 (September 2020)',
         });
 
-
-    var basemaps = {
-        "OSM": osm,
-        "Topo": otm
-    };
-
-    var overlayMaps = {
-        "1917 - 19??": historic,
-        "Radon": radon,
-        "Flood Zone 2": fz2,
-        "Flood Zone 3": fz3
-    };
-
-    L.control.layers(basemaps, overlayMaps).addTo(window.map);
     L.control.scale().addTo(window.map);
 
     return true;
@@ -83,3 +64,32 @@ function setLocation(latitude, longitude, zoom) {
     return true;
 }
 
+function registerLayer(layerDefinition) {
+
+    var newLayer = L.tileLayer(layerDefinition.url,
+        {
+            minZoom: mapMinZoom,
+            maxZoom: mapMaxZoom,
+            opacity: layerDefinition.opacity,
+            attribution: layerDefinition.attribution
+        });
+
+    layers.push([layerDefinition.layerName, newLayer]);
+
+    return true;
+}
+
+function setLayerState(layerName, active) {
+
+    for(var layer in layers) {
+        if (layer[0] == layerName) {
+            if (active) {
+                layer[1].addTo(window.map);
+            } else {
+                layer[1].remove();
+            }
+        }
+    }
+
+    return true;
+}
