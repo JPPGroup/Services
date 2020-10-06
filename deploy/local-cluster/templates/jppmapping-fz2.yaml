@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mapping-fz2  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mapping-fz2
+  template:
+    metadata:
+      labels:
+        app: mapping-fz2
+    spec:
+      containers:
+      - name: mapping-fz2        
+        image: ghcr.io/jppmapping/floodzone2-tile-server:0.1.0
+        args: ["run"]
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mapping-fz2
+spec:
+  selector:
+    app: mapping-fz2
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: mapping-fz2-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/mapping/fz2/`)  
+      middlewares:                    
+      - name: mapping-fz2-ingress-prefixstrip   
+      services:
+        - kind: Service
+          name: mapping-fz2
+          namespace: default
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: mapping-fz2-ingress-prefixstrip 
+spec:
+  stripPrefix:
+    prefixes:
+      - /mapping/fz2/   
+          

@@ -1,0 +1,77 @@
+﻿@using Mapping.Data
+@inject IJSRuntime runtime
+@inject MapLayerService mapLayers
+
+<div id="mapid" style="height: 100%; min-height: 675px"></div>
+
+<div style="display: flex; flex-flow: column wrap; height: 225px; align-content: flex-start;">
+    @foreach (var layerGroup in mapLayers.GetGroupedLayers())
+    {
+    <div style="margin: 10px; font-size: 10px;">
+        <h4 style="font-size: 14px;">@layerGroup.Key</h4>
+        @if (layerGroup.Key == "Base Layers")
+        {
+            int i = 0;
+            @foreach (var layer in layerGroup)
+            {
+                if (i == 0)
+                {
+                    <input type="radio" id="@layer.LayerName" name="baselayers" @onchange=@(args => RadioSelection(layer.LayerName)) checked="checked">
+                }
+                else
+                {
+                    <input type="radio" id="@layer.LayerName" name="baselayers" @onchange=@(args => RadioSelection(layer.LayerName))>
+                }
+                i++;
+                <label for="@layer.LayerName">@layer.LayerName</label><br>
+            }
+        }
+        else
+        {
+            @foreach (var layer in layerGroup)
+            {
+                <input type="checkbox" id="@layer.LayerName" name="baselayers" @onchange=@(args => SetLayerState(layer.LayerName, (bool)args.Value))>
+                <label for="@layer.LayerName">@layer.LayerName</label><br>
+            }
+        }
+    </div>
+    }
+</div> 
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await runtime.InvokeAsync<bool>("initMap", null);
+
+            foreach (MapTilleLayer mtl in mapLayers.GetTileLayers())
+            {
+                RegisterLayer(mtl);
+            }
+
+
+            string baseLayerName = mapLayers.GetBaseTileLayers().First().LayerName;
+            SetLayerState(baseLayerName, true);
+        }
+    }
+
+    public async void RegisterLayer(MapLayer layer)
+    {
+        await runtime.InvokeAsync<bool>("registerLayer", layer);
+    }
+
+    protected async void RadioSelection(string selectedLayer)
+    {
+        foreach (MapTilleLayer baseTileLayer in mapLayers.GetBaseTileLayers())
+        {
+            SetLayerState(baseTileLayer.LayerName, baseTileLayer.LayerName == selectedLayer);
+        }
+    }
+
+    public async void SetLayerState(string layerName, bool active)
+    {
+        await runtime.InvokeAsync<bool>("setLayerState", layerName, active);
+    }
+}

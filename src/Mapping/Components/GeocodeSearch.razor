@@ -1,0 +1,18 @@
+﻿@using Mapping.Data
+@inject GeocodeService service;
+@inject IJSRuntime runtime
+
+    <div >
+        <input type="text" id="searchInput" @onchange="Search" style="width: 100%">
+        <i class="fa fa-search" style="position: relative;z-index: 1;left: -25px;top: 1px;color: #7B7B7B;cursor:pointer;width: 0; cursor: default;pointer-events:none;"></i>
+    </div>
+
+    @code {
+
+        private async void Search(ChangeEventArgs e)
+        {
+            LatLong location = await service.GetLatitudeLongitude(e.Value as string);
+
+            await runtime.InvokeAsync<bool>("setLocation", location.Latitude, location.Longitude, 15);
+        }
+    }
