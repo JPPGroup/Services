@@ -7,51 +7,11 @@ function initMap() {
         new L.LatLng(49.852539, -7.793077),
         new L.LatLng(60.894042, 1.790425));*/
     
-    window.map = L.map('mapid').setView([55.37329, -3.001326], 4);
+    window.map = L.map('mapid').setView([52.332510, -0.897930], 6);
+    window.map.createPane('base');
+    window.map.getPane('base').style.zIndex = 150;
 
-    var otm = L.tileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png ',
-        {
-            minZoom: mapMinZoom,
-            maxZoom: mapMaxZoom,
-            //bounds: mapBounds,
-            attribution: 'optentopomap.org',
-        });
-
-    var historic = L.tileLayer('http://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg',
-        {
-            minZoom: mapMinZoom,
-            maxZoom: mapMaxZoom,
-            //bounds: mapBounds,
-            attribution:
-                'Historical Maps Layer, 1919-1947 from the <a href="http://maps.nls.uk/projects/api/">NLS Maps API</a>',
-            opacity: 0.25,
-            subdomains: '0123'
-        });
-
-    
-    var radon = L.tileLayer('http://10.10.1.27/mapping/radon/tile/{z}/{x}/{y}.png',
-        {
-            maxZoom: 18,
-            opacity: 0.4,
-            attribution:
-                'BGS Radon',
-        });
-
-    var fz2 = L.tileLayer('http://10.10.1.27/mapping/fz2/tile/{z}/{x}/{y}.png',
-        {
-            maxZoom: 18,
-            opacity: 0.8,
-            attribution:
-                'EA Flood Map for Planning - Flood Zone 2 (September 2020)',
-        });
-
-    var fz3 = L.tileLayer('http://10.10.1.27/mapping/fz3/tile/{z}/{x}/{y}.png',
-        {
-            maxZoom: 18,
-            opacity: 0.8,
-            attribution:
-                'EA Flood Map for Planning - Flood Zone 3 (September 2020)',
-        });
+    layers.push(["locationMarker", L.marker([52.332510, -0.897930]).addTo(window.map)]);
 
     L.control.scale().addTo(window.map);
 
@@ -60,12 +20,15 @@ function initMap() {
 
 function setLocation(latitude, longitude, zoom) {
     window.map.flyTo([latitude, longitude], zoom);
-    var marker = L.marker([latitude, longitude]).addTo(window.map);
+    var target = layers.find(layer => layer[0] === "locationMarker")[1];
+    target.remove();
+
+    layers.find(layer => layer[0] === "locationMarker")[1] = L.marker([latitude, longitude]).addTo(window.map);
     return true;
 }
 
 function registerLayer(layerDefinition) {
-
+    
     var newLayer = L.tileLayer(layerDefinition.url,
         {
             minZoom: mapMinZoom,
@@ -74,6 +37,10 @@ function registerLayer(layerDefinition) {
             attribution: layerDefinition.attribution
         });
 
+    if (layerDefinition.baseLayer) {
+        newLayer.options.pane = "base";
+    }
+
     layers.push([layerDefinition.layerName, newLayer]);
 
     return true;
@@ -81,7 +48,14 @@ function registerLayer(layerDefinition) {
 
 function setLayerState(layerName, active) {
 
-    for(var layer in layers) {
+    var target = layers.find(layer => layer[0] === layerName)[1];
+    if (active) {
+        target.addTo(window.map);
+    } else {
+        target.remove();
+    }
+
+    /*for(var layer in layers) {
         if (layer[0] == layerName) {
             if (active) {
                 layer[1].addTo(window.map);
@@ -89,7 +63,7 @@ function setLayerState(layerName, active) {
                 layer[1].remove();
             }
         }
-    }
+    }*/
 
     return true;
 }

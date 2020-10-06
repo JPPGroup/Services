@@ -9,8 +9,6 @@ namespace Mapping.Data
     {
         public bool BaseLayer { get; set; }
 
-        public string Group { get; set; }
-
         public string URL { get; set; }
         public float Opacity { get; set; }
         public string Attribution { get; set; }

@@ -8,5 +8,6 @@ namespace Mapping.Data
     public class MapLayer
     {
         public string LayerName { get; set; }
+        public string Group { get; set; }
     }
 }
