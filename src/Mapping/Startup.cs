@@ -47,6 +47,7 @@ namespace Mapping
                 app.UseHsts();
             }
 
+            app.UsePathBase("/mapping");
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
