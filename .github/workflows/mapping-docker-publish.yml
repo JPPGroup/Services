@@ -32,7 +32,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker src\. --file src\Mapping\Dockerfile
+            docker build src\. --file src\Mapping\Dockerfile
           fi
 
   # Push image to GitHub Packages.
