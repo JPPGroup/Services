@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping", "Mapping\Mapping.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBlazor", "SharedBlazor\SharedBlazor.csproj", "{EE1F9E07-81C4-4434-802A-DC300030B608}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MappingReportGenerator", "MappingReportGenerator\MappingReportGenerator.csproj", "{2EA9C25E-45F7-4D30-819B-63954C4C8C53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBroker", "MessageBroker\MessageBroker.csproj", "{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{EE1F9E07-81C4-4434-802A-DC300030B608}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE1F9E07-81C4-4434-802A-DC300030B608}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE1F9E07-81C4-4434-802A-DC300030B608}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EA9C25E-45F7-4D30-819B-63954C4C8C53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA9C25E-45F7-4D30-819B-63954C4C8C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA9C25E-45F7-4D30-819B-63954C4C8C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA9C25E-45F7-4D30-819B-63954C4C8C53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
