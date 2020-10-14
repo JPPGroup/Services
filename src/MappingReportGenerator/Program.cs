@@ -1,5 +1,4 @@
-﻿using Jpp.Common.Mapping;
-using Jpp.MessageBroker;
+﻿using Jpp.MessageBroker;
 using System;
 using System.IO;
 using System.Net;
@@ -109,7 +108,7 @@ namespace Jpp.MappingReportGenerator
 
             //MappingReport mappingReport = new MappingReport(provider, "Brixworth Office", "Bob the Builder", Guid.NewGuid().ToString().Remove(13), new WGS84(52.332510, -0.897930));
             //MappingReport mappingReport = new MappingReport(provider, "Trafalgar Square", "Bob the Builder", Guid.NewGuid().ToString().Remove(13), new WGS84(51.5074, -0.1278));
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 1; i++)
             {
                 using (MappingReport mappingReport = new MappingReport(provider, "Data Check", "Bob the Builder", Guid.NewGuid().ToString().Remove(13), new WGS84(52.329390, -0.601260)))
                 {

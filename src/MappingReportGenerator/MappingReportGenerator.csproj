@@ -13,10 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BruTile" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.5.4" />
     <PackageReference Include="SkiaSharp" Version="1.68.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="1.68.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Mapping\Common.Mapping.csproj" />
     <ProjectReference Include="..\MessageBroker\MessageBroker.csproj" />
   </ItemGroup>
 

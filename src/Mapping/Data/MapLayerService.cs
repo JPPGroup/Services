@@ -13,7 +13,7 @@ namespace Mapping.Data
             {
                 LayerName = "Open Street Maps",
                 Group = "Base Layers",
-                URL = "http://10.10.1.27/mapping/osm/tile/{z}/{x}/{y}.png",
+                URL = "http://services/mapping/osm/tile/{z}/{x}/{y}.png",
                 BaseLayer = true,
                 Opacity = 1,
                 Attribution = "OSM Street Maps Data"
@@ -56,7 +56,7 @@ namespace Mapping.Data
             {
                 LayerName = "Radon",
                 Group = "Geotechnical",
-                URL = "http://10.10.1.27/mapping/radon/tile/{z}/{x}/{y}.png",
+                URL = "http://services/mapping/radon/tile/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.4f,
                 Attribution = "BGS Radon",
@@ -67,7 +67,7 @@ namespace Mapping.Data
             {
                 LayerName = "Radon Protection",
                 Group = "Geotechnical",
-                URL = "http://10.10.1.27/mapping/radon/protection/{z}/{x}/{y}.png",
+                URL = "http://services/mapping/radon/protection/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.4f,
                 Attribution = "BGS Radon",
@@ -78,7 +78,7 @@ namespace Mapping.Data
             {
                 LayerName = "Flood Zone 2",
                 Group = "Environmental",
-                URL = "http://10.10.1.27/mapping/fz2/tile/{z}/{x}/{y}.png",
+                URL = "http://services/mapping/fz2/tile/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.8f,
                 Attribution = "EA Flood Map for Planning - Flood Zone 2 (September 2020)",
@@ -89,7 +89,7 @@ namespace Mapping.Data
             {
                 LayerName = "Flood Zone 3",
                 Group = "Environmental",
-                URL = "http://10.10.1.27/mapping/fz3/tile/{z}/{x}/{y}.png",
+                URL = "http://services/mapping/fz3/tile/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.8f,
                 Attribution = "EA Flood Map for Planning - Flood Zone 3 (September 2020)",
@@ -100,14 +100,14 @@ namespace Mapping.Data
             {
                 LayerName = "Superficial Ground",
                 Group = "Geotechnical",
-                URL = "http://10.10.1.27/mapping/sg/tile/{z}/{x}/{y}.png",
+                URL = "http://services/mapping/sg/tile/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.6f,
                 Attribution = "???",
                 Experimental = true,
                 Interactive = true,
-                InteractiveURL = "http://10.10.1.27/mapping/sg/geo.json",
-                InteractiveStyleURL = "http://10.10.1.27/mapping/sg/style.json"
+                InteractiveURL = "http://services/mapping/sg/geo.json",
+                InteractiveStyleURL = "http://services/mapping/sg/style.json"
             });
         }
 

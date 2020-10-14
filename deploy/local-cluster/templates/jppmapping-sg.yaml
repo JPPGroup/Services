@@ -1,31 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mapping-radon  
+  name: mapping-sg  
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mapping-radon
+      app: mapping-sg
   template:
     metadata:
       labels:
-        app: mapping-radon
+        app: mapping-sg
     spec:
       containers:
-      - name: mapping-radon        
-        image: ghcr.io/jppmapping/radon-tile-server:0.2.2
+      - name: mapping-sg        
+        image: ghcr.io/jppmapping/superficialground-tile-server:0.2.0
         args: ["run"]
         ports:
         - containerPort: 80
+        env:
+        - name: ALLOW_CORS
+          value: "enabled"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mapping-radon
+  name: mapping-sg
 spec:
   selector:
-    app: mapping-radon
+    app: mapping-sg
   ports:
     - protocol: TCP
       port: 80
@@ -34,28 +37,28 @@ spec:
 kind: IngressRoute
 apiVersion: traefik.containo.us/v1alpha1
 metadata:
-  name: mapping-radon-ingress
+  name: mapping-sg-ingress
   namespace: default
 spec:
   entryPoints:
     - web
   routes:
     - kind: Rule
-      match: PathPrefix(`/mapping/radon/`)  
+      match: PathPrefix(`/mapping/sg/`)  
       middlewares:                    
-      - name: mapping-radon-ingress-prefixstrip   
+      - name: mapping-sg-ingress-prefixstrip   
       services:
         - kind: Service
-          name: mapping-radon
+          name: mapping-sg
           namespace: default
           port: 80
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: mapping-radon-ingress-prefixstrip 
+  name: mapping-sg-ingress-prefixstrip 
 spec:
   stripPrefix:
     prefixes:
-      - /mapping/radon/   
+      - /mapping/sg/   
           

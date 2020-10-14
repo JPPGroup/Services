@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
-using Jpp.Common.Mapping;
 using SkiaSharp;
 
 namespace Jpp.MappingReportGenerator
