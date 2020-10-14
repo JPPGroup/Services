@@ -1,0 +1,23 @@
+# Default values for files.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+fullnameOverride: files
+replicaCount: 1
+image:
+  repository: jppapi.azurecr.io/files
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+
+instrumentationKey: "8eaefb0a-36de-4733-8958-afba9db33f54"
+
+probes:
+  enabled: false
+
+secrets: {}
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -1,0 +1,64 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "files.fullname" . }}
+  labels:
+    app: {{ template "files.name" . }}
+    chart: {{ template "files.chart" . }}
+    draft: {{ default "draft-app" .Values.draft }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "files.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "files.name" . }}
+        draft: {{ default "draft-app" .Values.draft }}
+        release: {{ .Release.Name }}
+      annotations:
+        buildID: {{ .Values.buildID }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:                 
+            - name: APPINSIGHTS_INSTRUMENTATIONKEY
+              value: {{ .Values.instrumentationKey }}
+            - name: FILES_UPLOADS_ROOT
+              value: "/var/tmp/files"
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          {{- if .Values.probes.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          {{- end }}
+    {{- with .Values.resources }}
+      resources:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

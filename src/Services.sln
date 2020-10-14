@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MappingReportGenerator", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageBroker", "MessageBroker\MessageBroker.csproj", "{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Email", "Email\Email.csproj", "{BAB539E5-ECEC-494C-8875-7E393D5CF76B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Files.Api", "Files\Files.Api.csproj", "{0F8E2E52-64A1-408C-BEDB-7AC93745C634}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EFBCDDF-3EF8-4358-B0B9-A9D75604F3BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAB539E5-ECEC-494C-8875-7E393D5CF76B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAB539E5-ECEC-494C-8875-7E393D5CF76B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAB539E5-ECEC-494C-8875-7E393D5CF76B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAB539E5-ECEC-494C-8875-7E393D5CF76B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F8E2E52-64A1-408C-BEDB-7AC93745C634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F8E2E52-64A1-408C-BEDB-7AC93745C634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F8E2E52-64A1-408C-BEDB-7AC93745C634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F8E2E52-64A1-408C-BEDB-7AC93745C634}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
