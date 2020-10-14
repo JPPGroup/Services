@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Mapping.Data
 {
@@ -28,7 +26,8 @@ namespace Mapping.Data
                 URL = "http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
                 BaseLayer = true,
                 Opacity = 1,
-                Attribution = "optentopomap.org"
+                Attribution = "optentopomap.org",
+                Experimental = true
             });
 
             layers.Add(new MapTilleLayer()
@@ -38,7 +37,8 @@ namespace Mapping.Data
                 URL = "http://nls.tileserver.com/nls/{z}/{x}/{y}.jpg",
                 BaseLayer = false,
                 Opacity = 0.25f,
-                Attribution = "Historical Maps Layer, 1919-1947 from the <a href=\"http://maps.nls.uk/projects/api/\">NLS Maps API</a>"
+                Attribution = "Historical Maps Layer, 1919-1947 from the <a href=\"http://maps.nls.uk/projects/api/\">NLS Maps API</a>",
+                Experimental = true
             });
 
             layers.Add(new MapTilleLayer()
@@ -48,7 +48,19 @@ namespace Mapping.Data
                 URL = "http://10.10.1.27/mapping/radon/tile/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.4f,
-                Attribution = "BGS Radon"
+                Attribution = "BGS Radon",
+                Experimental = true
+            });
+
+            layers.Add(new MapTilleLayer()
+            {
+                LayerName = "Radon Protection",
+                Group = "Geotechnical",
+                URL = "http://10.10.1.27/mapping/radon/protection/{z}/{x}/{y}.png",
+                BaseLayer = false,
+                Opacity = 0.4f,
+                Attribution = "BGS Radon",
+                Experimental = true
             });
 
             layers.Add(new MapTilleLayer()
@@ -58,7 +70,8 @@ namespace Mapping.Data
                 URL = "http://10.10.1.27/mapping/fz2/tile/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.8f,
-                Attribution = "EA Flood Map for Planning - Flood Zone 2 (September 2020)"
+                Attribution = "EA Flood Map for Planning - Flood Zone 2 (September 2020)",
+                Experimental = true
             });
 
             layers.Add(new MapTilleLayer()
@@ -68,7 +81,22 @@ namespace Mapping.Data
                 URL = "http://10.10.1.27/mapping/fz3/tile/{z}/{x}/{y}.png",
                 BaseLayer = false,
                 Opacity = 0.8f,
-                Attribution = "EA Flood Map for Planning - Flood Zone 3 (September 2020)"
+                Attribution = "EA Flood Map for Planning - Flood Zone 3 (September 2020)",
+                Experimental = true
+            });
+
+            layers.Add(new MapTilleLayer()
+            {
+                LayerName = "Superficial Ground",
+                Group = "Geotechnical",
+                URL = "http://10.10.1.27/mapping/sg/tile/{z}/{x}/{y}.png",
+                BaseLayer = false,
+                Opacity = 0.6f,
+                Attribution = "???",
+                Experimental = true,
+                Interactive = true,
+                InteractiveURL = "http://10.10.1.27/mapping/sg/geo.json",
+                InteractiveStyleURL = "http://10.10.1.27/mapping/sg/style.json"
             });
         }
 

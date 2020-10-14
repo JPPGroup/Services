@@ -12,5 +12,8 @@ namespace Mapping.Data
         public string URL { get; set; }
         public float Opacity { get; set; }
         public string Attribution { get; set; }
+        public bool Interactive { get; set; }
+        public string InteractiveURL { get; set; }
+        public string InteractiveStyleURL { get; set; }
     }
 }

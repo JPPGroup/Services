@@ -3,11 +3,11 @@ var mapMinZoom = 1;
 var mapMaxZoom = 18;
 
 function initMap() {
-    /*var mapBounds = new L.LatLngBounds(
-        new L.LatLng(49.852539, -7.793077),
-        new L.LatLng(60.894042, 1.790425));*/
     
-    window.map = L.map('mapid').setView([52.332510, -0.897930], 6);
+    window.map = L.map('mapid',
+        {
+            loadingControl: true,
+        }).setView([52.332510, -0.897930], 6);
     window.map.createPane('base');
     window.map.getPane('base').style.zIndex = 150;
 
@@ -28,7 +28,74 @@ function setLocation(latitude, longitude, zoom) {
 }
 
 function registerLayer(layerDefinition) {
-    
+
+    if (layerDefinition.interactive) {
+        if (registerGeoJson(layerDefinition)) {
+            return true;
+        }
+    }
+
+    registerTileLayer(layerDefinition);
+
+    return true;
+}
+
+function registerGeoJson(layerDefinition) {
+    fetch(layerDefinition.interactiveURL)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            return response.json();
+        }).then(async data => {
+
+            const response = await fetch(layerDefinition.interactiveStyleURL);
+            const stylejson = await response.json();
+
+            var layer = L.geoJSON(data, {
+                style: function (feature) {
+                    var field = Reflect.get(feature.properties, stylejson.property);
+                    var rule = stylejson.rules.find(ruleentry => ruleentry.key === field);
+
+                    if (typeof rule === "undefined" || rule === null) {
+                        return {
+                            color: "rgba(0, 0, 0, 0)",
+                            fillOpacity: layerDefinition.opacity,
+                            stroke: false
+                        };
+                        
+                    } else {
+                        return {
+                            color: rule.fill,
+                            fillOpacity: layerDefinition.opacity,
+                            stroke: false
+                        };
+                    }
+                },
+                onEachFeature: function (feature, layer) {
+
+                    var field = Reflect.get(feature.properties, stylejson.property);
+                    var rule = stylejson.rules.find(ruleentry => ruleentry.key === field);
+
+                    if (typeof rule === "undefined" || rule === null) {
+                        return;
+                    } else {
+                        layer.bindPopup("<h4>" + rule.title + "</h4><p>" + rule.description + "</p>");
+                    }
+                }
+            });
+
+            layers.push([layerDefinition.layerName + "Interactive", layer]);
+
+            return true;
+        })
+        .catch(error => {
+            return false;
+        });
+}
+
+function registerTileLayer(layerDefinition) {
     var newLayer = L.tileLayer(layerDefinition.url,
         {
             minZoom: mapMinZoom,
@@ -42,8 +109,6 @@ function registerLayer(layerDefinition) {
     }
 
     layers.push([layerDefinition.layerName, newLayer]);
-
-    return true;
 }
 
 function setLayerState(layerName, active) {
@@ -55,15 +120,36 @@ function setLayerState(layerName, active) {
         target.remove();
     }
 
-    /*for(var layer in layers) {
-        if (layer[0] == layerName) {
-            if (active) {
-                layer[1].addTo(window.map);
-            } else {
-                layer[1].remove();
-            }
-        }
-    }*/
+    return true;
+}
+
+function addQueryLayer(osm_string) {
+    var entry = layers.find(layer => layer[0] === "querylayer");
+    if (typeof entry === "undefined" || entry === null) {
+        entry = ["querylayer", null];
+        layers.push(entry);
+    } else {
+        entry[1].remove();
+    }
+
+    osm_data = JSON.parse(osm_string);
+    geojson = osmtogeojson(osm_data);
+
+    var myLayer = L.geoJSON().addTo(window.map);
+    myLayer.addData(geojson);
+
+    entry[1] = myLayer;
 
     return true;
+}
+
+function getBounds() {
+    bounds = window.map.getBounds();
+
+    return {
+        North: bounds.getNorth(),
+        South: bounds.getSouth(),
+        East: bounds.getEast(),
+        West: bounds.getWest()
+    }
 }
