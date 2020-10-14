@@ -31,6 +31,7 @@ namespace Mapping
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<GeocodeService>();
             services.AddSingleton<MapLayerService>();
+            services.AddSingleton<EntityQueryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

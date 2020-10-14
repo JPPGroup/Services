@@ -9,5 +9,6 @@ namespace Mapping.Data
     {
         public string LayerName { get; set; }
         public string Group { get; set; }
+        public bool Experimental { get; set; }
     }
 }

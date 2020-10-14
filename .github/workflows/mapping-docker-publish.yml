@@ -8,10 +8,15 @@ on:
 
     # Publish `v1.2.3` tags as releases.
     tags:
-      - v*
+      - mapping-v*
+      
+    paths:
+      - 'src/Mapping/**'
 
   # Run tests for any PRs.
   pull_request:
+    paths:
+      - 'src/Mapping/**'
 
 env:
   # TODO: Change variable to your image's name.
@@ -65,7 +70,7 @@ jobs:
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
           # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^mapping-v//')
 
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest

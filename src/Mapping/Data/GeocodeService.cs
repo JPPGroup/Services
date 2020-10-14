@@ -35,4 +35,17 @@ namespace Mapping.Data
         public string Latitude { get; set; }
         public string Longitude { get; set; }
     }
+
+    public class BoundingBox
+    {
+        public float North { get; set; }
+        public float South { get; set; }
+        public float East { get; set; }
+        public float West { get; set; }
+
+        public override string ToString()
+        {
+            return $"{South},{West},{North},{East}";
+        }
+    }
 }
