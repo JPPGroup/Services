@@ -32,6 +32,17 @@ namespace Mapping.Data
 
             layers.Add(new MapTilleLayer()
             {
+                LayerName = "ESRI Satellite",
+                Group = "Base Layers",
+                URL = "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                BaseLayer = true,
+                Opacity = 1,
+                Attribution = "ESRI",
+                Experimental = true
+            });
+
+            layers.Add(new MapTilleLayer()
+            {
                 LayerName = "1919-1947",
                 Group = "Historic Maps",
                 URL = "http://nls.tileserver.com/nls/{z}/{x}/{y}.jpg",
