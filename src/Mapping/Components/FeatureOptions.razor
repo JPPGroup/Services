@@ -1,0 +1,19 @@
+﻿@using Mapping.Data
+
+Search for:
+
+<div>
+    <input type="checkbox" @bind="options.Hospital" name="hospital" />
+    <label for="hospital">Hospital </label>
+</div>
+
+<div>
+    <input type="checkbox" @bind="options.School" name="school" />
+    <label for="school">School </label>
+</div>
+
+
+@code {
+    [Parameter]
+    public EntityQueryOptions options { get; set; }
+}

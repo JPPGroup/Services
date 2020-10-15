@@ -132,11 +132,26 @@ function addQueryLayer(osm_string) {
         entry[1].remove();
     }
 
-    osm_data = JSON.parse(osm_string);
-    geojson = osmtogeojson(osm_data);
+    var osm_data = JSON.parse(osm_string);
+    var geojson = osmtogeojson(osm_data);
 
-    var myLayer = L.geoJSON().addTo(window.map);
-    myLayer.addData(geojson);
+    var myLayer = L.geoJSON(geojson, {
+        style: function(feature) {
+            switch (feature.properties.amenity) {
+            case "school":
+                return { color: "#29c3e8" }
+
+            case "hospital":
+                return { color: "#ff0000" }
+
+            default:
+                return { color: "#f7ff90" }
+            }
+        },
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup("<h4>" + feature.properties.name + "</h4>" );
+        }
+    }).addTo(window.map);
 
     entry[1] = myLayer;
 

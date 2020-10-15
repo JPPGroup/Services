@@ -50,19 +50,18 @@
         </div>
     }
     <div style="margin: 10px; font-size: 10px;">
-        <h4 style="font-size: 14px;">Search For</h4>
-        <input type="button" @onclick="AddHospitals" value="Hospitals" />
-        <input type="button" @onclick="AddSchools" value="Schools" />
-    </div>
-    <div style="margin: 10px; font-size: 10px;">
         <h4 style="font-size: 14px;">Advanced</h4>
         <input type="button" @onclick="ShowTravel" value="Travel Analysis" />
+        <input type="button" @onclick="ShowFeatures" value="Features" />
+    </div>
+    <div style="margin: 15px">
+        <input type="button" @onclick="SearchFeatures" value="Search features in current view" />
     </div>
 </div> 
 
 @code {
 
-
+    public EntityQueryOptions entityOptions { get; set; }
 
     public TravelAnalysisOptions travelOptions { get; set; }
 
@@ -71,6 +70,7 @@
         if (firstRender)
         {
             travelOptions = new TravelAnalysisOptions();
+            entityOptions = new EntityQueryOptions();
 
             await runtime.InvokeAsync<bool>("initMap", mapState.Location);
 
@@ -136,6 +136,17 @@
     {
         await modal.ShowAsync("Travael Analysis", typeof(TravelAnalysis), new KeyValuePair<string, object>("Options", travelOptions));
         await UpdateTravel();
+    }
+
+    public async void ShowFeatures()
+    {
+        await modal.ShowAsync("Feature Search", typeof(FeatureOptions), new KeyValuePair<string, object>("Options", entityOptions));
+    }
+
+    public async void SearchFeatures()
+    {
+        string data = await query.GetQueryResponse(entityOptions, await GetBoundingBox());
+        await runtime.InvokeAsync<bool>("addQueryLayer", data);
     }
 
     public async Task UpdateTravel()
