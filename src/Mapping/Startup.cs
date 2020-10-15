@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Jpp.Common.Razor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,8 @@ namespace Mapping
             services.AddSingleton<GeocodeService>();
             services.AddSingleton<MapLayerService>();
             services.AddSingleton<EntityQueryService>();
+            services.AddScoped<ModalService>();
+            services.AddScoped<MapState>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

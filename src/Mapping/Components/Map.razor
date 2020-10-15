@@ -1,62 +1,78 @@
 ﻿@using Mapping.Data
 @using System.Threading
+@using Jpp.Common.Razor.Services
 @inject IJSRuntime runtime
 @inject MapLayerService mapLayers
 @inject EntityQueryService query;
+@inject ModalService modal
+@inject MapState mapState;
 
 <div id="mapid" style="height: 100%; min-height: 675px"></div>
 
 <div style="display: flex; flex-flow: column wrap; height: 225px; align-content: flex-start;">
     @foreach (var layerGroup in mapLayers.GetGroupedLayers())
     {
-    <div style="margin: 10px; font-size: 10px;">
-        <h4 style="font-size: 14px;">@layerGroup.Key</h4>
-        @if (layerGroup.Key == "Base Layers")
-        {
-            int i = 0;
-            @foreach (var layer in layerGroup)
+        <div style="margin: 10px; font-size: 10px;">
+            <h4 style="font-size: 14px;">@layerGroup.Key</h4>
+            @if (layerGroup.Key == "Base Layers")
             {
-                if (i == 0)
+                int i = 0;
+                @foreach (var layer in layerGroup)
                 {
-                    <input type="radio" id="@layer.LayerName" name="baselayers" @onchange=@(args => RadioSelection(layer.LayerName)) checked="checked">
-                }
-                else
-                {
-                    <input type="radio" id="@layer.LayerName" name="baselayers" @onchange=@(args => RadioSelection(layer.LayerName))>
-                }
-                i++;
-                <label for="@layer.LayerName">@layer.LayerName @if(layer.Experimental){ <div style="border-style: solid; color: red; border-width: thin;">Experimental</div>}</label><br>
-            }
-        }
-        else
-        {
-            @foreach (var layer in layerGroup)
-            {
-                <input type="checkbox" id="@layer.LayerName" name="baselayers" @onchange=@(args => SetLayerState(layer.LayerName, (bool)args.Value))>
-                <label for="@layer.LayerName">@layer.LayerName @if (layer.Experimental){<div style="border-style: solid; color: red; border-width: thin;">Experimental</div>}</label><br>
-                @if ((layer as MapTilleLayer).Interactive)
-                {
-                    <input type="checkbox" id="@layer.LayerName+Interactive" name="baselayers" @onchange=@(args => SetLayerState(layer.LayerName + "Interactive", (bool)args.Value))>
-                    <label for="@layer.LayerName">@layer.LayerName Interactive @if (layer.Experimental){<div style="border-style: solid; color: red; border-width: thin;">Experimental</div>}</label><br>
+                    if (i == 0)
+                    {
+                        <input type="radio" id="@layer.LayerName" name="baselayers" @onchange=@(args => RadioSelection(layer.LayerName)) checked="checked">
+                    }
+                    else
+                    {
+                        <input type="radio" id="@layer.LayerName" name="baselayers" @onchange=@(args => RadioSelection(layer.LayerName))>
+                    }
+                    i++;
+                    <label for="@layer.LayerName">@layer.LayerName @if (layer.Experimental)
+                    {<div style="border-style: solid; color: red; border-width: thin;">Experimental</div>}</label><br>
                 }
             }
-        }
-    </div>
+            else
+            {
+                @foreach (var layer in layerGroup)
+                {
+                    <input type="checkbox" id="@layer.LayerName" name="baselayers" @onchange=@(args => SetLayerState(layer.LayerName, (bool)args.Value))>
+                    <label for="@layer.LayerName">@layer.LayerName @if (layer.Experimental)
+                    {<div style="border-style: solid; color: red; border-width: thin;">Experimental</div>}</label><br>
+                    @if ((layer as MapTilleLayer).Interactive)
+                    {
+                        <input type="checkbox" id="@layer.LayerName+Interactive" name="baselayers" @onchange=@(args => SetLayerState(layer.LayerName + "Interactive", (bool)args.Value))>
+                        <label for="@layer.LayerName">@layer.LayerName Interactive @if (layer.Experimental)
+                        {<div style="border-style: solid; color: red; border-width: thin;">Experimental</div>}</label><br>
+                    }
+                }
+            }
+        </div>
     }
-<div style="margin: 10px; font-size: 10px;">
-    <h4 style="font-size: 14px;">Search For</h4>
-    <input type="button" @onclick="AddHospitals" value="Hospitals" />
-    <input type="button" @onclick="AddSchools" value="Schools" />
-</div>
+    <div style="margin: 10px; font-size: 10px;">
+        <h4 style="font-size: 14px;">Advanced</h4>
+        <input type="button" @onclick="ShowTravel" value="Travel Analysis" />
+        <input type="button" @onclick="ShowFeatures" value="Features" />
+    </div>
+    <div style="margin: 15px">
+        <input type="button" @onclick="SearchFeatures" value="Search features in current view" />
+    </div>
 </div> 
 
 @code {
+
+    public EntityQueryOptions entityOptions { get; set; }
+
+    public TravelAnalysisOptions travelOptions { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await runtime.InvokeAsync<bool>("initMap", null);
+            travelOptions = new TravelAnalysisOptions();
+            entityOptions = new EntityQueryOptions();
+
+            await runtime.InvokeAsync<bool>("initMap", mapState.Location);
 
             foreach (MapTilleLayer mtl in mapLayers.GetTileLayers())
             {
@@ -66,6 +82,12 @@
 
             string baseLayerName = mapLayers.GetBaseTileLayers().First().LayerName;
             SetLayerState(baseLayerName, true);
+
+            mapState.PropertyChanged += async (sender, args) =>
+            {
+                await runtime.InvokeAsync<bool>("setLocation", mapState.Location.Latitude, mapState.Location.Longitude, 15);
+                RemoveTravel();
+            };
         }
     }
 
@@ -108,5 +130,58 @@
     public async Task<BoundingBox> GetBoundingBox()
     {
         return await runtime.InvokeAsync<BoundingBox>("getBounds");
+    }
+
+    public async void ShowTravel()
+    {
+        await modal.ShowAsync("Travael Analysis", typeof(TravelAnalysis), new KeyValuePair<string, object>("Options", travelOptions));
+        await UpdateTravel();
+    }
+
+    public async void ShowFeatures()
+    {
+        await modal.ShowAsync("Feature Search", typeof(FeatureOptions), new KeyValuePair<string, object>("Options", entityOptions));
+    }
+
+    public async void SearchFeatures()
+    {
+        string data = await query.GetQueryResponse(entityOptions, await GetBoundingBox());
+        await runtime.InvokeAsync<bool>("addQueryLayer", data);
+    }
+
+    public async Task UpdateTravel()
+    {
+        List<TravelEntry> remove  = new List<TravelEntry>();
+
+        foreach (TravelEntry entry in travelOptions.Entries)
+        {
+            if (entry.Stale)
+            {
+                await runtime.InvokeAsync<bool>("addTravelLayer", entry, mapState.Location);
+            }
+
+            entry.New = false;
+            entry.Stale = false;
+            if(entry.Removed)
+                remove.Add(entry);
+        }
+
+        foreach (TravelEntry entry in remove)
+        {
+            await runtime.InvokeAsync<bool>("removeTravelLayer", entry);
+            travelOptions.Entries.Remove(entry);
+        }
+    }
+
+    public async Task RemoveTravel()
+    {
+        if (travelOptions != null)
+        {
+            foreach (TravelEntry entry in travelOptions.Entries)
+            {
+                entry.Removed = true;
+            }
+            UpdateTravel();
+        }
     }
 }

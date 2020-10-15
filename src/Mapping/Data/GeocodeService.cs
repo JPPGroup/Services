@@ -30,7 +30,7 @@ namespace Mapping.Data
         }
     }
 
-    public struct LatLong
+    public class LatLong
     {
         public string Latitude { get; set; }
         public string Longitude { get; set; }

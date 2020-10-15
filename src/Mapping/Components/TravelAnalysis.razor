@@ -1,0 +1,78 @@
+﻿@using Mapping.Data
+
+<input type="button" @onclick="CreateNew" value="Add New" />
+
+<div>
+<table>
+    <tr>
+        <td style="min-width: 100px">
+            Travel Mode
+        </td>
+        <td style="min-width: 200px">
+            Interval (minutes)
+        </td>
+        <td style="min-width: 200px">
+            Range (minutes)
+        </td>
+        <td style="min-width: 100px">
+        </td>
+    </tr>
+@foreach (TravelEntry entry in options.Entries)
+{
+
+
+    @if (!entry.Removed)
+    {
+        <tr>
+            <td>
+                <select @bind="entry.Type">
+                    @foreach (var tt in Enum.GetValues(typeof(TravelType)))
+                    {
+                        <option value="@tt">@tt</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <input type="number" @bind="entry.Interval"/>
+            </td>
+            <td>
+                <input type="number" @bind="entry.Range"/>
+            </td>
+            <td>
+                <input type="button" @onclick="@((args) => { RemoveEntry(entry); })" value="Remove"/>
+            </td>
+        </tr>
+    }
+}
+        </table>
+    </div>
+
+
+
+@code {
+    [Parameter]
+    public TravelAnalysisOptions options { get; set; }
+
+    public void CreateNew()
+    {
+        options.Entries.Add(new TravelEntry()
+        {
+            LayerName = Guid.NewGuid().ToString()
+        });
+
+        StateHasChanged();
+    }
+
+    public void RemoveEntry(TravelEntry entry)
+    {
+        if (entry.New)
+        {
+            options.Entries.Remove(entry);
+        }
+        else
+        {
+            entry.Removed = true;
+        }
+        StateHasChanged();
+    }
+}

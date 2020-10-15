@@ -2,12 +2,12 @@
 var mapMinZoom = 1;
 var mapMaxZoom = 18;
 
-function initMap() {
+function initMap(location) {
     
     window.map = L.map('mapid',
         {
             loadingControl: true,
-        }).setView([52.332510, -0.897930], 6);
+        }).setView([location.latitude, location.longitude], 6);
     window.map.createPane('base');
     window.map.getPane('base').style.zIndex = 150;
 
@@ -132,11 +132,26 @@ function addQueryLayer(osm_string) {
         entry[1].remove();
     }
 
-    osm_data = JSON.parse(osm_string);
-    geojson = osmtogeojson(osm_data);
+    var osm_data = JSON.parse(osm_string);
+    var geojson = osmtogeojson(osm_data);
 
-    var myLayer = L.geoJSON().addTo(window.map);
-    myLayer.addData(geojson);
+    var myLayer = L.geoJSON(geojson, {
+        style: function(feature) {
+            switch (feature.properties.amenity) {
+            case "school":
+                return { color: "#29c3e8" }
+
+            case "hospital":
+                return { color: "#ff0000" }
+
+            default:
+                return { color: "#f7ff90" }
+            }
+        },
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup("<h4>" + feature.properties.name + "</h4>" );
+        }
+    }).addTo(window.map);
 
     entry[1] = myLayer;
 
@@ -152,4 +167,95 @@ function getBounds() {
         East: bounds.getEast(),
         West: bounds.getWest()
     }
+}
+
+//Travel layers
+async function addTravelLayer(travelentry, locations) {
+
+    var entry = layers.find(layer => layer[0] === travelentry.layerName);
+    if (!(typeof entry === "undefined" || entry === null)) {
+        removeTravelLayer(travelentry);
+    } else {
+        entry = [travelentry.layerName, null];
+        layers.push(entry);
+    }
+
+    var url;
+    var method;
+
+    switch (travelentry.type) {
+        case 0:
+            url = "https://api.openrouteservice.org/v2/isochrones/driving-car";
+            method = "car";
+            break;
+
+        case 1:
+            url = "https://api.openrouteservice.org/v2/isochrones/foot-walking";
+            method = "foot";
+            break;
+
+        case 2:
+            url = "https://api.openrouteservice.org/v2/isochrones/cycling-regular";
+            method = "cycle";
+            break;
+
+        default:
+            return false;
+    }
+    
+    var requestBody = {
+        "locations": [[Number(locations.longitude), Number(locations.latitude)]],
+        "range": [travelentry.range * 60],
+        "interval": travelentry.interval * 60,
+        "range_type": "time"
+    }
+    
+    const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+            'Authorization': '5b3ce3597851110001cf624844f9a567079f465f93568e7ed6060c3f',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8'
+        },
+        body: JSON.stringify(requestBody) // body data type must match "Content-Type" header
+    });
+
+    var data = await response.json();
+    data.features = data.features.reverse();
+    
+    var myLayer = L.geoJSON(data,
+        {
+            style: {
+                color: getRandomColor(),
+
+            },
+            onEachFeature: function (feature, layer) {
+                var time = feature.properties.value / 60;
+                layer.bindPopup(time + " minute travel time by " + method);
+            }
+        }
+    ).addTo(window.map);
+
+    entry[1] = myLayer;
+
+    return true;
+}
+
+async function removeTravelLayer(travelentry) {
+    var entry = layers.find(layer => layer[0] === travelentry.layerName);
+    if (!(typeof entry === "undefined" || entry === null)) {
+        entry[1].remove();
+        entry[1] = null;
+    }
+
+    return true;
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }

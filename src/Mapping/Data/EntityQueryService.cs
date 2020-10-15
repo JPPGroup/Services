@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text.Encodings.Web;
-using System.Text.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Mapping.Data
@@ -20,6 +16,26 @@ namespace Mapping.Data
                 $"https://lz4.overpass-api.de/api/interpreter?data={inputString}");
 
             return await resp.Content.ReadAsStringAsync();
+        }
+
+        public async Task<string> GetQueryResponse(EntityQueryOptions options, BoundingBox bounds)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append($"[out:json];(");
+
+            //TODO: Consider reflection
+            if (options.Hospital)
+            {
+                query.Append($"way[amenity=hospital]({bounds});");
+            }
+            if (options.School)
+            {
+                query.Append($"way[amenity=school]({bounds});");
+            }
+
+            query.Append(");(._;>;);out;");
+
+            return await GetQueryResponse(query.ToString());
         }
     }
 }
