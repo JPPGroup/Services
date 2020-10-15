@@ -10,8 +10,8 @@ namespace Jpp.MappingReportGenerator
     class MappingReport : IDisposable
     {
         SKDocument _document;
-        public static float DPI = 72f / 25.4f * 6;//8;
-        public int XMargin = FromMillimeter(13);       
+        public static float DPI = 72f / 25.4f * 5;//8;
+        public int XMargin = FromMillimeter(13);
         public int YMargin = FromMillimeter(20);
         public int XWidth = FromMillimeter(394);
         public int YWidth = FromMillimeter(257);
@@ -27,8 +27,13 @@ namespace Jpp.MappingReportGenerator
         SKPaint line;
         SKBitmap logoBitmap;
 
+        List<DrawingTemplate> drawings;
+        bool _contentPage = false;
+
         public MappingReport(TileProvider provider, string ProjectName, string Client, string ReferenceNumber, WGS84 location)
         {
+            drawings = new List<DrawingTemplate>();
+
             _projectName = ProjectName;
             _client = Client;
             _referenceNumber = ReferenceNumber;
@@ -43,7 +48,7 @@ namespace Jpp.MappingReportGenerator
                 IsAntialias = false,
                 Color = new SKColor(0, 0, 0, 255),
                 IsStroke = false,
-                Typeface = SKTypeface.FromFamilyName("Calibri")                
+                Typeface = SKTypeface.FromFamilyName("Calibri")
             };
             _calibriLargeText = new SKPaint()
             {
@@ -81,16 +86,44 @@ namespace Jpp.MappingReportGenerator
             };
 
             //Logo
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Jpp.MappingReportGenerator.Resources.Navy logo.png")) 
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Jpp.MappingReportGenerator.Resources.Navy logo.png"))
             using (var stream = new SKManagedStream(s))
             {
                 logoBitmap = SKBitmap.Decode(stream);
-            }              
+            }
 
-            _document = SKDocument.CreatePdf($"{ReferenceNumber}.pdf", DPI);            
+            _document = SKDocument.CreatePdf($"{ReferenceNumber}.pdf", DPI);
         }
 
         public void AddDrawing(DrawingType drawingType)
+        {
+            DrawingTemplate template;
+            switch (drawingType)
+            {
+                case DrawingType.OS:
+                    template = new OSDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.OSLarge:
+                    template = new OSLargeDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.Radon:
+                    template = new RadonDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.FloodZone2:
+                    template = new FloodZone2DrawingTemplate(_provider);
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            drawings.Add(template);
+        }
+
+        private void DrawDrawing(DrawingTemplate template)
         {
             var info = new SKImageInfo(XMargin * 2 + XWidth, YMargin * 2 + YWidth);
 
@@ -98,29 +131,6 @@ namespace Jpp.MappingReportGenerator
             using (var surface = SKSurface.Create(info))
             using (var compositeCanvas = surface.Canvas)
             {
-                DrawingTemplate template;
-                switch (drawingType)
-                {
-                    case DrawingType.OS:
-                        template = new OSDrawingTemplate(_provider);
-                        break;
-
-                    case DrawingType.OSLarge:
-                        template = new OSLargeDrawingTemplate(_provider);
-                        break;
-
-                    case DrawingType.Radon:
-                        template = new RadonDrawingTemplate(_provider);
-                        break;
-
-                    case DrawingType.FloodZone2:
-                        template = new FloodZone2DrawingTemplate(_provider);
-                        break;
-
-                    default:
-                        throw new NotImplementedException();
-                }
-
                 //Draw drawing title
                 compositeCanvas.DrawText(template.GetTitle(), XKeyDivide + FromMillimeter(2), YMargin + FromMillimeter(40), _calibriTitle);
 
@@ -138,14 +148,13 @@ namespace Jpp.MappingReportGenerator
                         tempSurface.Draw(compositeCanvas, XMargin + XWidth - KeyWidth + FromMillimeter(4), YMargin + FromMillimeter(50), new SKPaint());
                 }
 
-                //compositeCanvas.Draw(gfx, 0, 0, new SKPaint());
                 surface.Draw(gfx, 0, 0, new SKPaint());
             }
             _document.EndPage();
         }
 
         public void DrawTemplate(SKCanvas canvas)
-        {            
+        {
             canvas.DrawRect(XMargin, YMargin, XWidth, YWidth, line);
             canvas.DrawLine(XKeyDivide, YMargin, XKeyDivide, YMargin + YWidth, line);
             canvas.DrawLine(XKeyDivide, YMargin + YWidth - LogoSize, XKeyDivide + KeyWidth, YMargin + YWidth - LogoSize, line);
@@ -164,7 +173,7 @@ namespace Jpp.MappingReportGenerator
             rect = new XRect(XKeyDivide + LogoSize, YMargin + YWidth - LogoSize + 20, KeyWidth - LogoSize, LogoSize - 40);
             string headerText = "JPP Consulting\n\n01908 889433\n\nsoftware@jppuk.net";
             tf1.DrawString(headerText, _calibriHeading, XBrushes.Navy, rect, XStringFormats.TopLeft);*/
-                        
+
             canvas.DrawText("While every effort has been made to validate the accuracy of the ", XKeyDivide + FromMillimeter(2), YMargin + FromMillimeter(4), _calibri);
             canvas.DrawText("information shown, this drawing is provided as is and all information", XKeyDivide + FromMillimeter(2), YMargin + FromMillimeter(7), _calibri);
             canvas.DrawText("shown should be independantly verified before using for design", XKeyDivide + FromMillimeter(2), YMargin + FromMillimeter(10), _calibri);
@@ -184,17 +193,90 @@ namespace Jpp.MappingReportGenerator
             canvas.DrawText(_projectName, XKeyDivide + FromMillimeter(32), YMargin + YWidth - LogoSize - FromMillimeter(25), _calibriHeading);
             canvas.DrawText(_client, XKeyDivide + FromMillimeter(32), YMargin + YWidth - LogoSize - FromMillimeter(20), _calibriHeading);
             canvas.DrawText(_referenceNumber, XKeyDivide + FromMillimeter(32), YMargin + YWidth - LogoSize - FromMillimeter(10), _calibriHeading);
-            canvas.DrawText(DateTime.Now.ToShortDateString(), XKeyDivide + FromMillimeter(32), YMargin + YWidth - LogoSize - FromMillimeter(5), _calibriHeading);            
+            canvas.DrawText(DateTime.Now.ToShortDateString(), XKeyDivide + FromMillimeter(32), YMargin + YWidth - LogoSize - FromMillimeter(5), _calibriHeading);
+        }
+
+        public void AddCover()
+        {
+            var info = new SKImageInfo(XMargin * 2 + XWidth, YMargin * 2 + YWidth);
+
+            using (SKCanvas gfx = _document.BeginPage(XMargin * 2 + XWidth, YMargin * 2 + YWidth))
+            using (var surface = SKSurface.Create(info))
+            using (var compositeCanvas = surface.Canvas)
+            {
+                SKPaint fill = new SKPaint();
+                fill.Color = new SKColor(0, 75, 145);
+                compositeCanvas.DrawRect(new SKRect(XMargin, YMargin, XWidth + XMargin, YWidth + YMargin), fill);
+                fill.Dispose();
+
+                SKPaint titleText = new SKPaint()
+                {
+                    TextSize = FromMillimeter(10),
+                    IsAntialias = false,
+                    Color = new SKColor(255, 255, 255, 255),
+                    IsStroke = false,
+                    Typeface = SKTypeface.FromFamilyName("Calibri"),
+                    FakeBoldText = true,
+                    TextAlign = SKTextAlign.Right
+                };
+
+                compositeCanvas.DrawText("JPP Consulting Location Report", FromMillimeter(375), FromMillimeter(220), titleText);
+                compositeCanvas.DrawText(_projectName, FromMillimeter(375), FromMillimeter(232), titleText);
+                compositeCanvas.DrawText(_referenceNumber, FromMillimeter(375), FromMillimeter(244), titleText);
+
+                titleText.Dispose();
+
+                surface.Draw(gfx, 0, 0, new SKPaint());
+            }
+            _document.EndPage();
+        }
+
+        public void AddContents()
+        {
+            _contentPage = true;
+        }
+
+        public void DrawContents()
+        {
+            var info = new SKImageInfo(XMargin * 2 + XWidth, YMargin * 2 + YWidth);
+
+            using (SKCanvas gfx = _document.BeginPage(XMargin * 2 + XWidth, YMargin * 2 + YWidth))
+            using (var surface = SKSurface.Create(info))
+            using (var compositeCanvas = surface.Canvas)
+            {
+                compositeCanvas.DrawText("Contents", XMargin, YMargin + FromMillimeter(6), _calibriTitle);
+                compositeCanvas.DrawLine(XMargin, YMargin + FromMillimeter(8), XWidth + XMargin, YMargin + FromMillimeter(8), line);
+
+                int pageCount = 1;
+                foreach (DrawingTemplate dt in drawings)
+                {
+                    compositeCanvas.DrawText(dt.GetTitle(), XMargin, YMargin + FromMillimeter(pageCount * 8 + 10), _calibriLargeText);
+                    compositeCanvas.DrawText("......", XMargin + FromMillimeter(80), YMargin + FromMillimeter(pageCount * 8 + 10), _calibriLargeText);
+                    compositeCanvas.DrawText($"{pageCount}", XMargin + FromMillimeter(140), YMargin + FromMillimeter(pageCount * 8 + 10), _calibriLargeText);
+                    pageCount++;
+                }
+
+                surface.Draw(gfx, 0, 0, new SKPaint());
+            }
+            _document.EndPage();
         }
 
         public void Finalise()
         {
+            if (_contentPage)
+            {
+                DrawContents();
+            }
+            foreach (DrawingTemplate dt in drawings)
+            {
+                DrawDrawing(dt);
+            }
             _document.Close();
         }
 
         public static int FromMillimeter(float y)
         {
-            return (int) (y * MappingReport.DPI);
+            return (int)(y * MappingReport.DPI);
         }
 
         public void Dispose()

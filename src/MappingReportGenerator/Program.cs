@@ -112,6 +112,8 @@ namespace Jpp.MappingReportGenerator
             {
                 using (MappingReport mappingReport = new MappingReport(provider, "Data Check", "Bob the Builder", Guid.NewGuid().ToString().Remove(13), new WGS84(52.329390, -0.601260)))
                 {
+                    mappingReport.AddCover();
+                    mappingReport.AddContents();
                     mappingReport.AddDrawing(DrawingType.OSLarge);
                     mappingReport.AddDrawing(DrawingType.OS);
                     mappingReport.AddDrawing(DrawingType.Radon);
