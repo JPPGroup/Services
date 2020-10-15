@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Mapping/Mapping.csproj", "Mapping/"]
 COPY ["SharedBlazor/SharedBlazor.csproj", "SharedBlazor/"]
-RUN dotnet nuget add source https://nuget.pkg.github.com/jppgroup/index.json --name "github" --username jppgroup --password ${GITHUBSECRET} --store-password-in-clear-text
+RUN dotnet nuget add source https://nuget.pkg.github.com/jppgroup/index.json --name "github" --username jppgroup --store-password-in-clear-text --password $GITHUBSECRET
 RUN dotnet restore "Mapping/Mapping.csproj"
 COPY . .
 WORKDIR "/src/Mapping"
