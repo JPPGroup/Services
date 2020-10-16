@@ -14,7 +14,11 @@ namespace Jpp.MappingReportGenerator
             Layers = new Dictionary<string, TileLayer>();
             Layers.Add("OSM", new TileLayer("http://services/mapping/osm/tile/{z}/{x}/{y}.png"));
             Layers.Add("floodzone2", new TileLayer("http://services/mapping/fz2/tile/{z}/{x}/{y}.png"));
+            Layers.Add("floodzone3", new TileLayer("http://services/mapping/fz3/tile/{z}/{x}/{y}.png"));
             Layers.Add("radon", new TileLayer("http://services/mapping/radon/tile/{z}/{x}/{y}.png"));
+            Layers.Add("satellite", new TileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"));
+            Layers.Add("historic", new TileLayer("http://nls.tileserver.com/nls/{z}/{x}/{y}.jpg"));
+            Layers.Add("superficialgeo", new TileLayer("http://services/mapping/sg/tile/{z}/{x}/{y}.png"));
         }
 
         /// <summary>
@@ -78,3 +82,4 @@ namespace Jpp.MappingReportGenerator
         }
     }
 }
+

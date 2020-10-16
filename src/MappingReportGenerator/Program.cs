@@ -110,20 +110,30 @@ namespace Jpp.MappingReportGenerator
             //MappingReport mappingReport = new MappingReport(provider, "Trafalgar Square", "Bob the Builder", Guid.NewGuid().ToString().Remove(13), new WGS84(51.5074, -0.1278));
             for (int i = 0; i < 1; i++)
             {
-                using (MappingReport mappingReport = new MappingReport(provider, "Data Check", "Bob the Builder", Guid.NewGuid().ToString().Remove(13), new WGS84(52.329390, -0.601260)))
+                //using (MappingReport mappingReport = new MappingReport(provider, "Data Check", "Bob the Builder", Guid.NewGuid().ToString().Remove(13), new WGS84(52.329390, -0.601260)))
+                using (MappingReport mappingReport = new MappingReport(provider, "Test Project", "Mr. A Client", Guid.NewGuid().ToString().Remove(13), new WGS84(52.351550, 0.149740)))
                 {
                     mappingReport.AddCover();
                     mappingReport.AddContents();
                     mappingReport.AddDrawing(DrawingType.OSLarge);
+                    mappingReport.AddDrawing(DrawingType.SatelliteLarge);
+                    mappingReport.AddDrawing(DrawingType.HistoricLarge);
                     mappingReport.AddDrawing(DrawingType.OS);
+                    mappingReport.AddDrawing(DrawingType.Satellite);
+                    mappingReport.AddDrawing(DrawingType.Historic);
+                    mappingReport.AddDrawing(DrawingType.OSSmall);
+                    mappingReport.AddDrawing(DrawingType.SatelliteSmall);
+                    mappingReport.AddDrawing(DrawingType.HistoricSmall);
                     mappingReport.AddDrawing(DrawingType.Radon);
+                    mappingReport.AddDrawing(DrawingType.SUperficialGeo);
                     mappingReport.AddDrawing(DrawingType.FloodZone2);
+                    mappingReport.AddDrawing(DrawingType.FloodZone3);
                     mappingReport.Finalise();
                 }
 
                 GC.Collect();
             }
-
+            Console.WriteLine("Done.");
             Console.ReadLine();
 #endif
 
@@ -135,3 +145,4 @@ namespace Jpp.MappingReportGenerator
         }
     }
 }
+

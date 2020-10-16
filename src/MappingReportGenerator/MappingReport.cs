@@ -10,7 +10,7 @@ namespace Jpp.MappingReportGenerator
     class MappingReport : IDisposable
     {
         SKDocument _document;
-        public static float DPI = 72f / 25.4f * 5;//8;
+        public static float DPI = 72f / 25.4f * 4;//5 for demo, 8 otherwise;
         public int XMargin = FromMillimeter(13);
         public int YMargin = FromMillimeter(20);
         public int XWidth = FromMillimeter(394);
@@ -25,7 +25,7 @@ namespace Jpp.MappingReportGenerator
         WGS84 _location;
         string _projectName, _client, _referenceNumber;
         SKPaint line;
-        SKBitmap logoBitmap;
+        SKBitmap logoBitmap, titleBitmap;
 
         List<DrawingTemplate> drawings;
         bool _contentPage = false;
@@ -92,7 +92,17 @@ namespace Jpp.MappingReportGenerator
                 logoBitmap = SKBitmap.Decode(stream);
             }
 
-            _document = SKDocument.CreatePdf($"{ReferenceNumber}.pdf", DPI);
+            using(Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Jpp.MappingReportGenerator.Resources.Title.bmp"))
+            using (var stream = new SKManagedStream(s))
+            {
+                titleBitmap = SKBitmap.Decode(stream);
+            }
+
+            SKDocumentPdfMetadata metadata = SKDocumentPdfMetadata.Default;
+            metadata.RasterDpi = DPI;
+            metadata.EncodingQuality = 10;
+
+            _document = SKDocument.CreatePdf($"{ReferenceNumber}.pdf", metadata);
         }
 
         public void AddDrawing(DrawingType drawingType)
@@ -108,12 +118,48 @@ namespace Jpp.MappingReportGenerator
                     template = new OSLargeDrawingTemplate(_provider);
                     break;
 
+                case DrawingType.OSSmall:
+                    template = new OSSmallDrawingTemplate(_provider);
+                    break;
+
                 case DrawingType.Radon:
                     template = new RadonDrawingTemplate(_provider);
                     break;
 
                 case DrawingType.FloodZone2:
                     template = new FloodZone2DrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.FloodZone3:
+                    template = new FloodZone3DrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.SatelliteLarge:
+                    template = new SatelliteLargeDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.Satellite:
+                    template = new SatelliteDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.SatelliteSmall:
+                    template = new SatelliteSmallDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.HistoricSmall:
+                    template = new HistoricSmallDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.Historic:
+                    template = new HistoricDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.HistoricLarge:
+                    template = new HistoricLargeDrawingTemplate(_provider);
+                    break;
+
+                case DrawingType.SUperficialGeo:
+                    template = new SuperficialGeoDrawingTemplate(_provider);
                     break;
 
                 default:
@@ -209,6 +255,12 @@ namespace Jpp.MappingReportGenerator
                 compositeCanvas.DrawRect(new SKRect(XMargin, YMargin, XWidth + XMargin, YWidth + YMargin), fill);
                 fill.Dispose();
 
+                using (var paint = new SKPaint())
+                {
+                    SKRect logoRect = new SKRect(XMargin + FromMillimeter(2), YMargin + FromMillimeter(26), XMargin + FromMillimeter(222), YMargin + FromMillimeter(189) + FromMillimeter(26));
+                    compositeCanvas.DrawBitmap(titleBitmap, logoRect, line);
+                }
+
                 SKPaint titleText = new SKPaint()
                 {
                     TextSize = FromMillimeter(10),
@@ -294,8 +346,17 @@ namespace Jpp.MappingReportGenerator
     {
         OS,
         OSLarge,
+        OSSmall,
+        Satellite,
+        SatelliteLarge,
+        SatelliteSmall,
+        HistoricLarge,
+        Historic,
+        HistoricSmall,
         Radon,
         MiningHazards,
-        FloodZone2
+        FloodZone2,
+        FloodZone3,
+        SUperficialGeo
     }
 }
