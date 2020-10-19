@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Jpp.Common.Razor.Services;
+using Jpp.MessageBroker;
+using Jpp.MessageBroker.Generics;
+using Jpp.MessageBroker.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +33,7 @@ namespace Mapping
             services.AddSingleton<GeocodeService>();
             services.AddSingleton<MapLayerService>();
             services.AddSingleton<EntityQueryService>();
+            services.AddSingleton<ISendChannel<GenerateRequestMessage>, GenerateRequestSendChannel>();
             services.AddScoped<ModalService>();
             services.AddScoped<MapState>();
         }

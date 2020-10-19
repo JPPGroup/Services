@@ -1,12 +1,8 @@
 ﻿using Jpp.MessageBroker;
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Jpp.MessageBroker.Generics;
+using Jpp.MessageBroker.Mapping;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Jpp.MappingReportGenerator
 {
@@ -14,8 +10,9 @@ namespace Jpp.MappingReportGenerator
     {
         static void Main(string[] args)
         {
+            CreateHostBuilder(args).Build().Run();
 
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            /*CancellationTokenSource tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;
 
 #if !DEBUG
@@ -141,8 +138,16 @@ namespace Jpp.MappingReportGenerator
 #if !DEBUG
             background.Wait();
 #endif
-            Console.WriteLine("Terminated.");            
+            Console.WriteLine("Terminated.");     */       
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<Worker>();
+                    services.AddSingleton<IReceiveChannel<GenerateRequestMessage>, GenerateRequestReceiveChannel>();
+                });
     }
 }
 

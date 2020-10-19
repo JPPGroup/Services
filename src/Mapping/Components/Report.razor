@@ -1,0 +1,50 @@
+﻿@using Jpp.MessageBroker.Mapping
+@using Mapping.Data
+@using Jpp.MessageBroker.Generics
+@using Jpp.Common.Razor.Services
+@inject MapState state
+@inject ISendChannel<GenerateRequestMessage> _sender
+@inject ModalService _modal
+<EditForm Model="@message" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>
+        Client:
+        <InputText id="Client" @bind-Value="message.Client" />
+    </label>
+    <br />
+    <label>
+        Project:
+        <InputText id="Project" @bind-Value="message.Project" />
+    </label>
+    <br />
+    <label>
+        Contact Email:
+        <InputText id="Email" @bind-Value="message.Email" />
+    </label>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private GenerateRequestMessage message;
+
+    protected override void OnParametersSet()
+    {
+        message = new GenerateRequestMessage()
+        {
+            Id = Guid.NewGuid().ToString().Remove(13),
+            Longitude = double.Parse(state.Location.Longitude),
+            Latitude = double.Parse(state.Location.Latitude)
+        
+        };
+        base.OnParametersSet();
+    }
+
+    private async void HandleValidSubmit()
+    {
+        await _sender.SendMessageAsync(message);
+        _modal.Close(true, null);
+    }
+}

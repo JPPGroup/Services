@@ -30,6 +30,31 @@ namespace Jpp.MappingReportGenerator
         List<DrawingTemplate> drawings;
         bool _contentPage = false;
 
+        public static MappingReport CreateStandard(TileProvider provider, string ProjectName, string Client,
+            string ReferenceNumber, WGS84 location)
+        {
+            MappingReport mappingReport = new MappingReport(provider, ProjectName, Client, ReferenceNumber, location);
+
+            mappingReport.AddCover();
+            mappingReport.AddContents();
+            mappingReport.AddDrawing(DrawingType.OSLarge);
+            mappingReport.AddDrawing(DrawingType.SatelliteLarge);
+            mappingReport.AddDrawing(DrawingType.HistoricLarge);
+            mappingReport.AddDrawing(DrawingType.OS);
+            mappingReport.AddDrawing(DrawingType.Satellite);
+            mappingReport.AddDrawing(DrawingType.Historic);
+            mappingReport.AddDrawing(DrawingType.OSSmall);
+            mappingReport.AddDrawing(DrawingType.SatelliteSmall);
+            mappingReport.AddDrawing(DrawingType.HistoricSmall);
+            mappingReport.AddDrawing(DrawingType.Radon);
+            mappingReport.AddDrawing(DrawingType.SUperficialGeo);
+            mappingReport.AddDrawing(DrawingType.FloodZone2);
+            mappingReport.AddDrawing(DrawingType.FloodZone3);
+            mappingReport.Finalise();
+
+            return mappingReport;
+        }
+
         public MappingReport(TileProvider provider, string ProjectName, string Client, string ReferenceNumber, WGS84 location)
         {
             drawings = new List<DrawingTemplate>();

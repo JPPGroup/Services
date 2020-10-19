@@ -56,6 +56,7 @@
     </div>
     <div style="margin: 15px">
         <input type="button" @onclick="SearchFeatures" value="Search features in current view" />
+        <input type="button" @onclick="ShowReport" value="Generate Report" />
     </div>
 </div> 
 
@@ -183,5 +184,10 @@
             }
             UpdateTravel();
         }
+    }
+
+    public async void ShowReport()
+    {
+        await modal.ShowAsync("Report", typeof(Report));
     }
 }

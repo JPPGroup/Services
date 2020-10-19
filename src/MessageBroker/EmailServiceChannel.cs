@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Jpp.MessageBroker
 {
-    public class EmailServiceChannel : IMessageChanel<EmailServiceMessage>
+    public class EmailServiceChannel : IChannel<EmailServiceMessage>
     {
         private const string QUEUE_NAME = "email_service_task_queue";
 
@@ -57,7 +57,7 @@ namespace Jpp.MessageBroker
             });
         }
 
-        public async Task<EmailServiceMessage> ReceiveMessageAsync()
+        public async Task<EmailServiceMessage> ReceiveMessageAsync(CancellationToken cancellationToken)
         {
             if (_receivedMessage == null) _receivedReset.WaitOne();
 
