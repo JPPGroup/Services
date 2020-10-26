@@ -17,10 +17,10 @@ namespace Jpp.Email.Service
         private readonly SmtpClient _smtpClient;
         private readonly HttpClient _httpClient;
 
-        public static Message Create(EmailServiceMessage message, string sender, SmtpClient smtpClient, HttpClient httpClient)
+        /*public static Message Create(EmailServiceMessage message, string sender, SmtpClient smtpClient, HttpClient httpClient)
         {
             return new Message(sender, message.EmailAddress, message.Subject, message.Body, message.AttachmentGuid, smtpClient, httpClient);
-        }
+        }*/
 
         private Message(string sender, string recipient, string subject, string body, Guid? attachmentGuid, SmtpClient smtpClient, HttpClient httpClient)
         {

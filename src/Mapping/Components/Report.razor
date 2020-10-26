@@ -45,6 +45,8 @@
     private async void HandleValidSubmit()
     {
         await _sender.SendMessageAsync(message);
-        _modal.Close(true, null);
+        _modal.Close(true);
+
+        await _modal.ShowAsync("Report", typeof(ReportConfirm));
     }
 }

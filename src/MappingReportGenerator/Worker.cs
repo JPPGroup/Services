@@ -26,22 +26,30 @@ namespace Jpp.MappingReportGenerator
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                GenerateRequestMessage workItem = await _messageChannel.ReceiveMessageAsync(stoppingToken);
-                DateTime start = DateTime.Now;
-
-                _logger.LogInformation($"Request received, generating new standard report {workItem.Id}");
-                using (MappingReport.CreateStandard(_provider, workItem.Project, workItem.Client, workItem.Id,
-                    new WGS84(workItem.Latitude, workItem.Longitude)))
+                try
                 {
-                    int i = 0;
+                    GenerateRequestMessage workItem = await _messageChannel.ReceiveMessageAsync(stoppingToken);
+                    DateTime start = DateTime.Now;
+
+                    _logger.LogInformation($"Request received, generating new standard report {workItem.Id}");
+                    using (MappingReport.CreateStandard(_provider, workItem.Project, workItem.Client, workItem.Id,
+                        new WGS84(workItem.Latitude, workItem.Longitude)))
+                    {
+                        int i = 0;
+                    }
+
+                    GC.Collect();
+                    _messageChannel.RequestComplete();
+
+                    DateTime end = DateTime.Now;
+                    TimeSpan duration = end - start;
+                    _logger.LogInformation($"Report {workItem.Id} finished in {duration.TotalSeconds}s");
                 }
-
-                GC.Collect();
-                _messageChannel.RequestComplete();
-
-                DateTime end = DateTime.Now;
-                TimeSpan duration = end - start;
-                _logger.LogInformation($"Report {workItem.Id} finished in {duration.TotalSeconds}s");
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Work loop threw exception");
+                    _messageChannel.RequestFailed();
+                }
             }
         }
     }

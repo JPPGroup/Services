@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace Jpp.Files.Api
+namespace Jpp.Files
 {
     public class Program
     {
@@ -13,7 +13,6 @@ namespace Jpp.Files.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
                 .ConfigureAppConfiguration((hostingContext, config) => {
                     var env = hostingContext.HostingEnvironment;
                     config

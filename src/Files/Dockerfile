@@ -1,21 +1,21 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS base
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Files/Files.Api.csproj", "Files/"]
-
-RUN dotnet restore "Files/Files.Api.csproj"
+COPY ["Files/Files.csproj", "Files/"]
+RUN dotnet restore "Files/Files.csproj"
 COPY . .
 WORKDIR "/src/Files"
-RUN dotnet build "Files.Api.csproj" -c Release -o /app
+RUN dotnet build "Files.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Files.Api.csproj" -c Release -o /app
+RUN dotnet publish "Files.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app .
-RUN mkdir /var/tmp/files
-ENTRYPOINT ["dotnet", "Jpp.Files.Api.dll"]
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Jpp.Files.dll"]

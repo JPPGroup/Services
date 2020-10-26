@@ -7,22 +7,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
-namespace Jpp.Files.Api.Controllers
+namespace Jpp.Files.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class FilesController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly IFileProvider _fileProvider;
+        private FileManager _files;
 
-        public FilesController(IFileProvider fileProvider, ILogger<FilesController> logger)
+        public FilesController(ILogger<FilesController> logger, FileManager files)
         {
-            _logger = logger;            
-            _fileProvider = fileProvider;
+            _logger = logger;
+            _files = files;
         }
 
         [HttpPost("Base64")]
@@ -35,26 +34,16 @@ namespace Jpp.Files.Api.Controllers
         public async Task<IActionResult> UploadFileBase64Async([FromBody] Base64Model model)
         {
             try
-            { 
-                if (!(_fileProvider is PhysicalFileProvider provider)) throw new ArgumentException("Invalid provider type.");
-                var bytes = Convert.FromBase64String(model.Base64);
-
-                if (bytes.Length <= 0) return BadRequest();
+            {
+                if (string.IsNullOrWhiteSpace(model.Base64)) return BadRequest();
+                if (string.IsNullOrWhiteSpace(model.FileName)) return BadRequest();
 
                 var extension = Path.GetExtension(model.FileName).ToLowerInvariant();
                 if (GetMimeTypes().All(e => e.Key != extension)) return BadRequest();
 
-                var fileId = Guid.NewGuid().ToString();
-                var fileName = fileId + extension;
-                var uploads = Path.Combine(provider.Root, fileId);
-                var fullFileName = Path.Combine(uploads, fileName);
+                var bytes = Convert.FromBase64String(model.Base64);
 
-                Directory.CreateDirectory(Path.GetDirectoryName(fullFileName));
-
-                using (var stream = new FileStream(fullFileName, FileMode.Create))
-                {
-                    await stream.WriteAsync(bytes, 0, bytes.Length);
-                }
+                Guid fileId = await _files.CreateFile(bytes, model.FileName);
 
                 return new OkObjectResult(fileId);
             }                                
@@ -76,23 +65,13 @@ namespace Jpp.Files.Api.Controllers
         {
             try
             {
-                if (!(_fileProvider is PhysicalFileProvider provider)) throw new ArgumentException("Invalid provider type.");
                 if (file.Length <= 0) return BadRequest();
 
                 var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
                 if (GetMimeTypes().All(e => e.Key != extension)) return BadRequest();
 
-                var fileId = Guid.NewGuid().ToString();
-                var fileName = fileId + extension;
-                var uploads = Path.Combine(provider.Root, fileId);           
-                var fullFileName = Path.Combine(uploads, fileName);
-
-                Directory.CreateDirectory(Path.GetDirectoryName(fullFileName));
-
-                using (var stream = new FileStream(fullFileName, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
+                using Stream dataStream = file.OpenReadStream();
+                Guid fileId = await _files.CreateFile(dataStream, file.FileName);
 
                 return new OkObjectResult(fileId);
             }                                
@@ -112,18 +91,16 @@ namespace Jpp.Files.Api.Controllers
         {
             try
             {
-                var contents = _fileProvider.GetDirectoryContents(id.ToString());
-                if (!contents.Exists || !contents.Any()) return NotFound();
-
-                var memory = new MemoryStream();
-                var path = contents.First().PhysicalPath;
-                using (var stream = new FileStream(path, FileMode.Open))
+                (Stream data, string filename) = await _files.GetFile(id);
+                using (data)
                 {
-                    await stream.CopyToAsync(memory);
+                    return File(data, GetContentType(filename), Path.GetFileName(filename));
                 }
-
-                memory.Position = 0;
-                return File(memory, GetContentType(path), Path.GetFileName(path));
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.LogError(ex, ex.Message, null);
+                return NotFound();
             }
             catch (Exception ex)
             {

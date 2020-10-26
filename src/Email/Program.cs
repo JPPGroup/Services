@@ -24,7 +24,7 @@ namespace Jpp.Email.Service
             var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
 
-            var backgroundTask = Task.Run(async () =>
+            /*var backgroundTask = Task.Run(async () =>
             {
                 var capturedToken = token;
 
@@ -56,7 +56,7 @@ namespace Jpp.Email.Service
                 e.Cancel = true;
             };
 
-            backgroundTask.Wait(token);
+            backgroundTask.Wait(token);*/
         }
 
         private static IConfiguration CreateConfiguration()
