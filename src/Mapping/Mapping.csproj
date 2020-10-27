@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Jpp.Common" Version="0.4.1" />
     <PackageReference Include="Jpp.Common.Razor" Version="0.4.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   </ItemGroup>
 

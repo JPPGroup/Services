@@ -1,13 +1,13 @@
 ﻿@using Mapping.Data
-@using System.Threading
 @using Jpp.Common.Razor.Services
 @inject IJSRuntime runtime
 @inject MapLayerService mapLayers
 @inject EntityQueryService query;
+@inject ProjectQueryService projects;
 @inject ModalService modal
 @inject MapState mapState;
 
-<div id="mapid" style="height: 100%; min-height: 675px"></div>
+<div id="mapid" style="height: 100%; min-height: 580px"></div>
 
 <div style="display: flex; flex-flow: column wrap; height: 225px; align-content: flex-start;">
     @foreach (var layerGroup in mapLayers.GetGroupedLayers())
@@ -49,8 +49,12 @@
             }
         </div>
     }
-    <div style="margin: 10px; font-size: 10px;">
-        <h4 style="font-size: 14px;">Advanced</h4>
+<div style="margin: 10px; font-size: 10px;">
+    <h4 style="font-size: 14px;">Advanced</h4>
+    <div>
+        <input type="checkbox" id="projects" name="baselayers" @onchange=@(args => SetLayerState("projects", (bool)args.Value))>
+        <label for="projects">Projects</label>
+        </div>
         <input type="button" @onclick="ShowTravel" value="Travel Analysis" />
         <input type="button" @onclick="ShowFeatures" value="Features" />
     </div>
@@ -72,13 +76,16 @@
             travelOptions = new TravelAnalysisOptions();
             entityOptions = new EntityQueryOptions();
 
+            string data = await projects.GetAllProjectsAsGeoJson();
+
             await runtime.InvokeAsync<bool>("initMap", mapState.Location);
+            await runtime.InvokeAsync<bool>("registerProjectLocations", data);
+
 
             foreach (MapTilleLayer mtl in mapLayers.GetTileLayers())
             {
                 RegisterLayer(mtl);
             }
-
 
             string baseLayerName = mapLayers.GetBaseTileLayers().First().LayerName;
             SetLayerState(baseLayerName, true);
