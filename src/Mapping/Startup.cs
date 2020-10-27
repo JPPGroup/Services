@@ -33,6 +33,7 @@ namespace Mapping
             services.AddSingleton<GeocodeService>();
             services.AddSingleton<MapLayerService>();
             services.AddSingleton<EntityQueryService>();
+            services.AddSingleton<ProjectQueryService>();
             services.AddScoped<ModalService>();
             services.AddScoped<MapState>();
         }

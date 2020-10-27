@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Jpp.Common;
+﻿using Jpp.Common;
 
 namespace Mapping.Data
 {
@@ -18,8 +14,8 @@ namespace Mapping.Data
         }
         private LatLong _location = new LatLong()
         {
-            Latitude = "52.332510",
-            Longitude = "-0.897930"
+            Latitude = 52.332510,
+            Longitude = -0.897930
         };
     }
 }

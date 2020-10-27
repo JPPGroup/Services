@@ -95,6 +95,58 @@ function registerGeoJson(layerDefinition) {
         });
 }
 
+function registerProjectLocations(geojsonstring) {
+    var geojson = JSON.parse(geojsonstring);
+
+    var geojsonMarkerOptions = {
+        radius: 6,
+        fillColor: "#ffffff",
+        color: "#000000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    var myLayer = L.geoJSON(geojson,
+        {
+            pointToLayer: function(feature, latlng) {
+                switch (feature.properties.category) {
+                case "Soil Engineering":
+                    geojsonMarkerOptions.fillColor = "#556B2F";
+                    break;
+
+                default:
+                    geojsonMarkerOptions.fillColor = "#000000";
+                    break;
+                }
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            },
+            onEachFeature: function(feature, layer) {
+                var description;
+                switch (feature.properties.category) {
+                case "Soil Engineering":
+                    description = "Geotechnical";
+                    break;
+
+                default:
+                    description = "Unkown type";
+                }
+
+
+                layer.bindPopup("<p>" +
+                    feature.properties.name +
+                    "</p><p style=\"font-style: italic;color: DarkGrey;\">" +
+                    description +
+                    "</p><p><a href=\"https://deltekpim.jppuk.net/XWeb/entity/entity.aspx?ec=3&code=" +
+                    feature.properties.id +
+                    "\" target=\"_blank\">Open in deltek</a></p>");
+            }
+        });
+
+    layers.push(["projects", myLayer]);
+    return true;
+}
+
 function registerTileLayer(layerDefinition) {
     var newLayer = L.tileLayer(layerDefinition.url,
         {
