@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mapping
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mapping
+  template:
+    metadata:
+      labels:
+        app: mapping
+    spec:
+      containers:
+      - name: mapping
+        image: {{ .Values.mapping.image | quote }}
+        ports:
+        - containerPort: 80
+        resources:          
+          requests:
+            cpu: "2"
+            memory: "250M"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mapping
+spec:
+  selector:
+    app: mapping
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: mapping-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/mapping/`)        
+      services:
+        - kind: Service
+          name: mapping
+          namespace: default
+          port: 80
+
+          

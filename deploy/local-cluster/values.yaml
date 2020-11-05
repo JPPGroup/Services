@@ -30,4 +30,13 @@ traefik:
       # nodePort: 32443
   nodeSelector:      
     node-role.kubernetes.io/master: "true"
+    
+mapping:
+  image: ghcr.io/jppgroup/mapping:0.4.2
+  layers:
+    replicas: 2
+    memoryRequests: "150M"
+    cpuRequests: "0.5"
+    persistence: true
+    persistenceSize: "5Gi"
   

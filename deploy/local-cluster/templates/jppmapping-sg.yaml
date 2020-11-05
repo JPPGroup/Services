@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mapping-sg  
+spec:
+  replicas: {{ .Values.mapping.layers.replicas }}
+  selector:
+    matchLabels:
+      app: mapping-sg
+  template:
+    metadata:
+      labels:
+        app: mapping-sg
+    spec:
+      {{ if .Values.mapping.layers.persistence }}
+      volumes:
+      - name: tiles
+        persistentVolumeClaim:
+          claimName: sg-tile-pvc 
+      {{ end }}
+      containers:
+      - name: mapping-sg        
+        image: ghcr.io/jppmapping/superficialground-tile-server:0.2.0
+        args: ["run"]
+        {{ if .Values.mapping.layers.persistence }}
+        volumeMounts:
+        - name: tiles
+          mountPath: "/var/lib/mod_tile"
+        {{ end }}
+        ports:
+        - containerPort: 80
+        env:
+        - name: ALLOW_CORS
+          value: "enabled"
+        livenessProbe:
+          httpGet:
+            path: /tile/0/0/0.png
+            port: 80
+          failureThreshold: 1
+          periodSeconds: 15
+        startupProbe:
+          httpGet:
+            path: /tile/0/0/0.png
+            port: 80
+          failureThreshold: 4
+          periodSeconds: 30
+        resources:          
+          requests:
+            cpu: {{ .Values.mapping.layers.cpuRequests }}
+            memory: {{ .Values.mapping.layers.memoryRequests }}            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mapping-sg
+spec:
+  selector:
+    app: mapping-sg
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: mapping-sg-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/mapping/sg/`)  
+      middlewares:                    
+      - name: mapping-sg-ingress-prefixstrip   
+      services:
+        - kind: Service
+          name: mapping-sg
+          namespace: default
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: mapping-sg-ingress-prefixstrip 
+spec:
+  stripPrefix:
+    prefixes:
+      - /mapping/sg/   
+{{ if .Values.mapping.layers.persistence }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sg-tile-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: {{ .Values.mapping.layers.persistenceSize }}            
+{{ end }}      

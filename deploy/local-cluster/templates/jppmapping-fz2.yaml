@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mapping-fz2  
+spec:
+  replicas: {{ .Values.mapping.layers.replicas }}
+  selector:
+    matchLabels:
+      app: mapping-fz2
+  template:
+    metadata:
+      labels:
+        app: mapping-fz2
+    spec:
+      {{ if .Values.mapping.layers.persistence }}
+      volumes:
+      - name: tiles
+        persistentVolumeClaim:
+          claimName: fz2-tile-pvc 
+      {{ end }}
+      containers:
+      - name: mapping-fz2        
+        image: ghcr.io/jppmapping/floodzone2-tile-server:0.1.0
+        args: ["run"]
+        {{ if .Values.mapping.layers.persistence }}
+        volumeMounts:
+        - name: tiles
+          mountPath: "/var/lib/mod_tile"
+        {{ end }}
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /tile/0/0/0.png
+            port: 80
+          failureThreshold: 1
+          periodSeconds: 15
+        startupProbe:
+          httpGet:
+            path: /tile/0/0/0.png
+            port: 80
+          failureThreshold: 4
+          periodSeconds: 30
+        resources:          
+          requests:
+            cpu: {{ .Values.mapping.layers.cpuRequests }}
+            memory: {{ .Values.mapping.layers.memoryRequests }}            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mapping-fz2
+spec:
+  selector:
+    app: mapping-fz2
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: mapping-fz2-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/mapping/fz2/`)  
+      middlewares:                    
+      - name: mapping-fz2-ingress-prefixstrip   
+      services:
+        - kind: Service
+          name: mapping-fz2
+          namespace: default
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: mapping-fz2-ingress-prefixstrip 
+spec:
+  stripPrefix:
+    prefixes:
+      - /mapping/fz2/   
+{{ if .Values.mapping.layers.persistence }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fz2-tile-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: {{ .Values.mapping.layers.persistenceSize }}            
+{{ end }}
