@@ -1,0 +1,73 @@
+﻿@page "/"
+
+@using CadsRcUsage.Data
+@inject CadsService Service
+
+<h1>CADS License Information</h1>
+
+<p>
+    @foreach (var category in categories)
+    {
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="@($"#{category.Key}Collapse")" aria-expanded="false" aria-controls="@($"{category.Key}Collapse")">@category.Key.ToDescription()</button>
+    }
+</p>
+
+<div class="row">
+    @foreach (var category in categories)
+    {
+        <div class="col">
+            <div class="collapse multi-collapse" id="@($"{category.Key}Collapse")">
+            @if (category.Any())
+            {
+                <div class="accordion" id="@($"{category.Key}Accordion")">
+                    @foreach (var lic in category)
+                    {
+                        <div class="card">
+                            <div class="card-header" id="@lic.Type">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="@($"#{lic.Category}{lic.Type}Collapse")" aria-expanded="false" aria-controls="@($"{lic.Category}{lic.Type}Collapse")">
+                                        @lic.Type.ToDescription()
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div id="@($"{lic.Category}{lic.Type}Collapse")" class="collapse" aria-labelledby="@lic.Type" data-parent="@($"#{category.Key}Accordion")">
+                                <div class="card-body">
+                                    @if (lic.Users.Any())
+                                    {
+                                        @foreach (var user in lic.Users)
+                                        {
+                                            <span class="badge @(lic.Users.Count() < lic.MaxUsers ? "badge-success" : "badge-danger")">@user</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            <em>Not in use.</em>
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p><em>Loading...</em></p>
+            }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<IGrouping<LicenseCategory, LicenseInformation>> categories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var info = await Service.ReadLicenseInformationAsync();
+
+        categories = info.GroupBy(l => l.Category);
+    }
+}
