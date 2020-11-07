@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Jpp.Web.Service
+namespace Jpp.Projects
 {
     [ExcludeFromCodeCoverage]
     public static class EnumExtensions

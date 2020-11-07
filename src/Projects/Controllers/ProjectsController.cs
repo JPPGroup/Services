@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using Jpp.Web.Service.Models;
-using Jpp.Web.Service.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Jpp.Projects.Models;
+using Jpp.Projects.Resources;
 
-namespace Jpp.Web.Service.Controllers
+namespace Jpp.Projects.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

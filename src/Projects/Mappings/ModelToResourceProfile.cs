@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Jpp.Web.Service.Models;
-using Jpp.Web.Service.Resources;
 using System;
 using System.Linq;
+using Jpp.Projects.Models;
+using Jpp.Projects.Resources;
 
-namespace Jpp.Web.Service.Mappings
+namespace Jpp.Projects.Mappings
 {
     public class ModelToResourceProfile : Profile
     {

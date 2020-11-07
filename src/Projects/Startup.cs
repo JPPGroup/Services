@@ -1,6 +1,4 @@
 using AutoMapper;
-using Jpp.Web.Service.Adapters;
-using Jpp.Web.Service.Mappings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,10 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using Jpp.Projects.Mappings;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.OpenApi.Models;
 
-namespace Jpp.Web.Service
+namespace Jpp.Projects
 {
     [ExcludeFromCodeCoverage]
     public class Startup
@@ -25,8 +24,7 @@ namespace Jpp.Web.Service
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
-            services.AddScoped<IProjectService, ProjectService>();
+            services.AddSingleton<IProjectService, ProjectService>();
             services.AddAutoMapper(typeof(ModelToResourceProfile));
 
             services.AddCors(options =>
@@ -75,12 +73,13 @@ namespace Jpp.Web.Service
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "JPP Web API v1");
                 c.RoutePrefix = string.Empty;
             });
-            app.UseHealthChecks("/healthcheck");
+            
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/healthchecks");
             });
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 
-namespace Jpp.Web.Service
+namespace Jpp.Projects
 {
     [ExcludeFromCodeCoverage]
     public static class Program

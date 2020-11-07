@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Jpp.Web.Service.Models;
+using Jpp.Projects.Models;
 
-namespace Jpp.Web.Service
+namespace Jpp.Projects
 {
     public interface IProjectService
     {

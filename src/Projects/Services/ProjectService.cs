@@ -1,38 +1,38 @@
-﻿using Jpp.Web.Service.Adapters;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Jpp.Web.Service.Models;
+using Jpp.Projects.Models;
+using Microsoft.Extensions.Logging;
 
-namespace Jpp.Web.Service
+namespace Jpp.Projects
 {
     public class ProjectService : IProjectService
     {
-        private readonly ILoggerAdapter<ProjectService> logger;
-        private readonly IConfiguration configuration;
-        private readonly IMemoryCache cache;
+        private readonly ILogger<ProjectService> _logger;
+        private readonly IConfiguration _configuration;
+        private readonly IMemoryCache _cache;
 
-        public ProjectService(ILoggerAdapter<ProjectService> logger, IConfiguration configuration, IMemoryCache cache)
+        public ProjectService(ILogger<ProjectService> logger, IConfiguration configuration, IMemoryCache cache)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            this.cache = cache ?? throw new ArgumentNullException(nameof(cache));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         }
 
-        public Task<IList<Project>> ListAsync(Company company)
+        public async Task<IList<Project>> ListAsync(Company company)
         {
-            return Task.FromResult(GetProjectList(company));
+            return await GetProjectList(company);
         }
 
-        private IList<Project> GetProjectList(Company company)
+        private async Task<IList<Project>> GetProjectList(Company company)
         {
             try
             {
-                return cache.GetOrCreate($"Projects{company}", entry =>
+                return await _cache.GetOrCreateAsync($"Projects{company}", entry =>
                 {
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
                     return this.GetCompanyProjects(company);
@@ -41,7 +41,7 @@ namespace Jpp.Web.Service
             }
             catch (SqlException ex)
             {
-                this.logger.LogError(ex, "Unable to get projects.");
+                _logger.LogError(ex, "Unable to get projects.");
                 return new List<Project>();
             }
         }
@@ -70,9 +70,9 @@ namespace Jpp.Web.Service
             return list;
         }
 
-        private List<Project> GetCompanyProjects(Company company)
+        private async Task<List<Project>> GetCompanyProjects(Company company)
         {
-            using var connection = new SqlConnection(configuration.GetConnectionString("PIM"));
+            using var connection = new SqlConnection(_configuration.GetConnectionString("PIM"));
             var command = CreateProjectListSqlCommand(company);
             command.Connection = connection;
 

@@ -1,4 +1,4 @@
-﻿namespace Jpp.Web.Service.Resources
+﻿namespace Jpp.Projects.Resources
 {
     public class ProjectResource
     {
