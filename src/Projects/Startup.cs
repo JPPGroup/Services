@@ -6,8 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Jpp.Projects.Mappings;
-using Microsoft.AspNetCore.Server.IISIntegration;
+using Jpp.Projects.Services;
 using Microsoft.OpenApi.Models;
 
 namespace Jpp.Projects
@@ -48,14 +49,13 @@ namespace Jpp.Projects
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "JPP Web API", Version = "v1" });
             });
-
-            services.AddAuthentication(IISDefaults.AuthenticationScheme);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -79,7 +79,7 @@ namespace Jpp.Projects
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/healthchecks");
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

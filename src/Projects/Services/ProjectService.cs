@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Jpp.Projects.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Jpp.Projects
+namespace Jpp.Projects.Services
 {
     public class ProjectService : IProjectService
     {
@@ -25,17 +25,12 @@ namespace Jpp.Projects
 
         public async Task<IList<Project>> ListAsync(Company company)
         {
-            return await GetProjectList(company);
-        }
-
-        private async Task<IList<Project>> GetProjectList(Company company)
-        {
             try
             {
                 return await _cache.GetOrCreateAsync($"Projects{company}", entry =>
                 {
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
-                    return this.GetCompanyProjects(company);
+                    return GetProjectsByCompany(company);
                 });
 
             }
@@ -46,11 +41,35 @@ namespace Jpp.Projects
             }
         }
 
+        private async Task<List<Project>> GetProjectsByCompany(Company company)
+        {
+            return await Task.Run(() =>
+            {
+                using SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("PIM"));
+                var command = CreateProjectListSqlCommand(company);
+                command.Connection = connection;
+
+                using var dataSet = new DataSet("Projects");
+                using var adapter = new SqlDataAdapter { SelectCommand = command };
+                adapter.Fill(dataSet);
+
+                return BuildProjectList(dataSet);
+            });
+        }
+
         private static SqlCommand CreateProjectListSqlCommand(Company company)
         {
             var cmd = new SqlCommand();
-            cmd.Parameters.Add("@company", SqlDbType.Int).Value = company;
-            cmd.CommandText = "SELECT Project_Code, Name, Project_Category_ID FROM U2VW_Finance_Search_Project_Base WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = @company";
+            if (company == Company.All)
+            {
+                cmd.CommandText = "SELECT Project_Code, Name, Project_Category_ID FROM U2VW_Finance_Search_Project_Base WHERE Project_Code LIKE '[0-9]%'";
+                
+            }
+            else
+            {
+                cmd.Parameters.Add("@company", SqlDbType.Int).Value = company;
+                cmd.CommandText = "SELECT Project_Code, Name, Project_Category_ID FROM U2VW_Finance_Search_Project_Base WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = @company";
+            }
             return cmd;
         }
 
@@ -68,19 +87,6 @@ namespace Jpp.Projects
             }
 
             return list;
-        }
-
-        private async Task<List<Project>> GetCompanyProjects(Company company)
-        {
-            using var connection = new SqlConnection(_configuration.GetConnectionString("PIM"));
-            var command = CreateProjectListSqlCommand(company);
-            command.Connection = connection;
-
-            using var dataSet = new DataSet("Projects");
-            using var adapter = new SqlDataAdapter { SelectCommand = command };
-            adapter.Fill(dataSet);
-
-            return BuildProjectList(dataSet);
         }
     }
 }
