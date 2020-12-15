@@ -45,7 +45,9 @@ namespace Jpp.Projects.Services
         {
             return await Task.Run(() =>
             {
-                using SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("PIM"));
+                string connectionString = _configuration.GetConnectionString("PIM");
+
+                using SqlConnection connection = new SqlConnection(connectionString);
                 var command = CreateProjectListSqlCommand(company);
                 command.Connection = connection;
 

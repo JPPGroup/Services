@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projects  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: projects
+  template:
+    metadata:
+      labels:
+        app: projects
+    spec:
+      containers:
+      - name: mapping-radon        
+        image: ghcr.io/jppgroup/projects:latest
+        args: ["run"]
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: projects
+spec:
+  selector:
+    app: projects
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: projects-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/projects/`)  
+      middlewares:                    
+      - name: projects-ingress-prefixstrip   
+      services:
+        - kind: Service
+          name: projects
+          namespace: default
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: projects-prefixstrip 
+spec:
+  stripPrefix:
+    prefixes:
+      - /projects/   
+          
