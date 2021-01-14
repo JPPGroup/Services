@@ -34,7 +34,19 @@ namespace Jpp.Projects.Models
 
         private int GetCategory()
         {
-            return this.TryGetRowValue("Project_Category_ID", out var rowValue) ? (int)rowValue : default;
+            string catName = this.TryGetRowValue("Project_Category", out var rowValue) ? (string)rowValue : string.Empty;
+
+            switch (catName)
+            {
+                case "Civil Engineering":
+                    return (int)Projects.Category.CivilEngineering;
+
+                case "Structural Engineering":
+                    return (int)Projects.Category.StructuralEngineering;
+
+                default:
+                    return (int) Projects.Category.Other;
+            }
         }
     }
 }
