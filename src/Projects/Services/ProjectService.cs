@@ -62,16 +62,20 @@ namespace Jpp.Projects.Services
         private static SqlCommand CreateProjectListSqlCommand(Company company)
         {
             var cmd = new SqlCommand();
-            if (company == Company.All)
+
+            switch (company)
             {
-                cmd.CommandText = "SELECT Project_Code, Name, Project_Category_ID FROM U2VW_Finance_Search_Project_Base WHERE Project_Code LIKE '[0-9]%'";
-                
+                case Company.All:
+                    cmd.CommandText =
+                        "SELECT Project_Code, Name, Project_Category FROM EXVW_Project_Data WHERE Project_Code LIKE '[0-9]%'";
+                    break;
+
+                case Company.Consulting:
+                    cmd.CommandText =
+                        "SELECT Project_Code, Name, Project_Category FROM EXVW_Project_Data WHERE Project_Code LIKE '[0-9]%' AND (Project_Category = 'Civil Engineering' OR Project_Category = 'Structural Engineering')";
+                    break;
             }
-            else
-            {
-                cmd.Parameters.Add("@company", SqlDbType.Int).Value = company;
-                cmd.CommandText = "SELECT Project_Code, Name, Project_Category_ID FROM U2VW_Finance_Search_Project_Base WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = @company";
-            }
+
             return cmd;
         }
 
