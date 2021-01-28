@@ -1,5 +1,3 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal AS base
 COPY Projects/openssl.cnf /etc/ssl/openssl.cnf
 WORKDIR /app
@@ -22,8 +20,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 #Force support for older TLS versions
-#RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
-#RUN sed -i 's/TLSv1.2/TLSv1.0/g' /etc/ssl/openssl.cnf
 COPY Projects/openssl.cnf /etc/ssl/openssl.cnf
 
 ENTRYPOINT ["dotnet", "Projects.dll"]

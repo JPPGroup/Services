@@ -37,7 +37,8 @@ namespace Jpp.Projects
             });
 
             services.AddMemoryCache();
-            services.AddHealthChecks();
+            string sqlConnectionString = Configuration.GetConnectionString("PIM");
+            services.AddHealthChecks().AddSqlServer(sqlConnectionString);
             services.AddApplicationInsightsTelemetry();
             services.AddRouting(o =>
             {
