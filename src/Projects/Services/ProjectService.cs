@@ -72,7 +72,7 @@ namespace Jpp.Projects.Services
 
                 case Company.Consulting:
                     cmd.CommandText =
-                        "SELECT Project_Code, Name, Project_Category FROM EXVW_Project_Data WHERE Project_Code LIKE '[0-9]%' AND (Project_Category = 'Civil Engineering' OR Project_Category = 'Structural Engineering'  OR Project_Category = 'Structural Surveys' OR Project_Category = 'Development Planning')";
+                        "SELECT Project_Code, Name, Project_Category FROM EXVW_Project_Data WHERE Project_Code LIKE '[0-9]%' AND Project_Code NOT LIKE '%SF' AND (Project_Category = 'Civil Engineering' OR Project_Category = 'Structural Engineering'  OR Project_Category = 'Structural Surveys' OR Project_Category = 'Development Planning')";
                     break;
             }
 
