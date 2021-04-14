@@ -44,6 +44,12 @@ namespace Jpp.Projects.Models
                 case "Structural Engineering":
                     return (int)Projects.Category.StructuralEngineering;
 
+                case "Structural Surveys":
+                    return (int)Projects.Category.StructuralSurveys;
+
+                case "Development Planning":
+                    return (int)Projects.Category.DevelopmentPlanning;
+
                 default:
                     return (int) Projects.Category.Other;
             }
