@@ -50,6 +50,18 @@ namespace Jpp.Projects.Models
                 case "Development Planning":
                     return (int)Projects.Category.DevelopmentPlanning;
 
+                case "Surveying":
+                    return (int)Projects.Category.Surveying;
+
+                case "Soil Engineering":
+                    return (int)Projects.Category.SoilEngineering;
+
+                case "Architecture (New Build)":
+                    return (int)Projects.Category.ArchitectureNewBuild;
+
+                case "Architecture ( Refurbishments)":
+                    return (int)Projects.Category.ArchitectureRefurbishments;
+
                 default:
                     return (int) Projects.Category.Other;
             }

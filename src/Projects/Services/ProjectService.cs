@@ -72,7 +72,27 @@ namespace Jpp.Projects.Services
 
                 case Company.Consulting:
                     cmd.CommandText =
-                        "SELECT Project_Code, Name, Project_Category FROM EXVW_Project_Data WHERE Project_Code LIKE '[0-9]%' AND Project_Code NOT LIKE '%SF' AND (Project_Category = 'Civil Engineering' OR Project_Category = 'Structural Engineering'  OR Project_Category = 'Structural Surveys' OR Project_Category = 'Development Planning')";
+                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 1";
+                    break;
+
+                case Company.Geo:
+                    cmd.CommandText =
+                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 2";
+                    break;
+
+                case Company.SmithFoster:
+                    cmd.CommandText =
+                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 5";
+                    break;
+
+                case Company.Surveying:
+                    cmd.CommandText =
+                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 3";
+                    break;
+
+                case Company.WeArchitects:
+                    cmd.CommandText =
+                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 4";
                     break;
             }
 
