@@ -8,5 +8,6 @@
         public string Grouping { get; set; }
         public string Folder { get; set; }
         public string SharedMailPath { get; set; }
+        public Company Company { get; set; }
     }
 }
