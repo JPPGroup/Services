@@ -15,6 +15,7 @@ namespace Jpp.Projects.Models
         public string Code => this.GetCode();
         public string Name => this.GetName();
         public int Category => this.GetCategory();
+        public Company Company => this.GetCompany();
 
         private bool TryGetRowValue(string field, out object rowValue)
         {
@@ -64,6 +65,33 @@ namespace Jpp.Projects.Models
 
                 default:
                     return (int) Projects.Category.Other;
+            }
+        }
+
+        private Company GetCompany()
+        {
+            int catName = this.TryGetRowValue("Finance_Company_ID", out var rowValue) ? (int)rowValue : 0;
+
+            switch (catName)
+            {
+                case 1:
+                    return Company.Consulting;
+
+                case 2:
+                    return Company.Geo;
+
+                case 3:
+                    return Company.Surveying;
+
+                case 4:
+                    return Company.WeArchitects;
+
+                case 5:
+                    return Company.SmithFoster;
+
+                default:
+                    return Company.All;
+
             }
         }
     }

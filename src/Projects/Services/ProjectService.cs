@@ -67,7 +67,7 @@ namespace Jpp.Projects.Services
             {
                 case Company.All:
                     cmd.CommandText =
-                        "SELECT Project_Code, Name, Project_Category FROM EXVW_Project_Data WHERE Project_Code LIKE '[0-9]%'";
+                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%'";
                     break;
 
                 case Company.Consulting:
