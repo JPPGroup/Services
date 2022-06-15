@@ -33,5 +33,15 @@ namespace Jpp.Projects.Controllers
             var resources = _mapper.Map<IEnumerable<Project>, IEnumerable<ProjectResource>>(projects);
             return resources;
         }
+
+        [HttpGet("user")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(IEnumerable<ProjectResource>))]
+        [SwaggerOperation(OperationId = "getProjects")]
+        public async Task<IEnumerable<ProjectResource>> GetAsync([FromQuery]string firstname, [FromQuery]string lastname)
+        {
+            var projects = await _projectService.ListAsyncByUser(firstname, lastname);
+            var resources = _mapper.Map<IEnumerable<Project>, IEnumerable<ProjectResource>>(projects);
+            return resources;
+        }
     }
 }
