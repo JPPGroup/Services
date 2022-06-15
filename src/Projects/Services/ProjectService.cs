@@ -41,6 +41,24 @@ namespace Jpp.Projects.Services
             }
         }
 
+        public async Task<IList<Project>> ListAsyncByUser(string firstname, string lastname)
+        {
+            try
+            {
+                return await _cache.GetOrCreateAsync($"Projects-{firstname}-{lastname}", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+                    return GetProjectsByUser(firstname, lastname);
+                });
+
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Unable to get projects.");
+                return new List<Project>();
+            }
+        }
+
         private async Task<List<Project>> GetProjectsByCompany(Company company)
         {
             return await Task.Run(() =>
@@ -56,6 +74,24 @@ namespace Jpp.Projects.Services
                 adapter.Fill(dataSet);
 
                 return BuildProjectList(dataSet);
+            });
+        }
+
+        private async Task<List<Project>> GetProjectsByUser(string firstname, string lastname)
+        {
+            return await Task.Run(() =>
+            {
+                string connectionString = _configuration.GetConnectionString("PIM");
+
+                using SqlConnection connection = new SqlConnection(connectionString);
+                var command = new SqlCommand($"SELECT [Contact_ID] ,[Active],[Forename],[Surname],[NT_User],[Project_Code],[DeltekPIM].[dbo].[EXVW_Project_Data].[Name],[Project_Category],[Finance_Company_ID] FROM[DeltekPIM].[dbo].[EXVW_Project_Contacts] INNER JOIN[DeltekPIM].[dbo].[EXVW_Project_Data] ON[DeltekPIM].[dbo].[EXVW_Project_Contacts].[Project_ID] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] JOIN [DeltekPIM].[dbo].[EXVW_Project_Service] ON [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]=[DeltekPIM].[dbo].[EXVW_Project_Service].[Expr1] WHERE UPPER([Forename]) LIKE UPPER('{firstname}') AND UPPER([Surname]) LIKE UPPER('{lastname}')");
+                command.Connection = connection;
+
+                using var dataSet = new DataSet("UserProjects");
+                using var adapter = new SqlDataAdapter { SelectCommand = command };
+                adapter.Fill(dataSet);
+
+                return BuildProjectList(dataSet);                
             });
         }
 

@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
 COPY Projects/openssl.cnf /etc/ssl/openssl.cnf
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
 COPY ["Projects/Projects.csproj", "Projects/"]
 RUN dotnet restore "Projects/Projects.csproj"
