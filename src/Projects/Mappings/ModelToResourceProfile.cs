@@ -3,6 +3,8 @@ using System;
 using System.Linq;
 using Jpp.Projects.Models;
 using Jpp.Projects.Resources;
+using Projects.Models;
+using CommonDataModels;
 
 namespace Jpp.Projects.Mappings
 {
@@ -16,6 +18,16 @@ namespace Jpp.Projects.Mappings
                 .ForMember(r => r.Folder, map => map.MapFrom(m => $"{m.Code}-{m.Name}"))
                 .ForMember(r => r.Category, map => map.MapFrom(m => ((Category)m.Category).ToDescription()))
                 .AfterMap(BuildFolderProperties);
+
+            CreateMap<InvoiceModel, Invoice>();
+
+            CreateMap<ProjectResource, ProjectDetails>();
+
+            CreateMap<Project, ProjectDetails>().ConvertUsing((entity, c, context) =>
+            {
+                var intermediate = context.Mapper.Map<ProjectResource>(entity);
+                return context.Mapper.Map<ProjectDetails>(intermediate);
+            });
         }
 
         private static void BuildFolderProperties(Project source, ProjectResource destination)

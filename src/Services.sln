@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30406.217
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapping", "Mapping\Mapping.csproj", "{99992EA5-AF41-402B-9700-D8C98B06BAF6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBlazor", "SharedBlazor\SharedBlazor.csproj", "{EE1F9E07-81C4-4434-802A-DC300030B608}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projects", "Projects\Projects.csproj", "{6AC818FF-C757-4357-92AF-2779AA0B6EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonDataModels", "CommonDataModels\CommonDataModels.csproj", "{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{6AC818FF-C757-4357-92AF-2779AA0B6EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AC818FF-C757-4357-92AF-2779AA0B6EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AC818FF-C757-4357-92AF-2779AA0B6EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

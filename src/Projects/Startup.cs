@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using Jpp.Projects.Mappings;
 using Jpp.Projects.Services;
 using Microsoft.OpenApi.Models;
+using Projects.Services;
 
 namespace Jpp.Projects
 {
@@ -26,6 +27,8 @@ namespace Jpp.Projects
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IProjectService, ProjectService>();
+            services.AddSingleton<IInvoiceService, InvoiceService>();
+            services.AddSingleton<ProjectDetailsFactory>();
             services.AddAutoMapper(typeof(ModelToResourceProfile));
 
             services.AddCors(options =>
