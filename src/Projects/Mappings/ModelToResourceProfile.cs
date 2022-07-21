@@ -23,6 +23,8 @@ namespace Jpp.Projects.Mappings
 
             CreateMap<ProjectResource, ProjectDetails>();
 
+            CreateMap<ProjectContactModel, ProjectContact>();
+
             CreateMap<Project, ProjectDetails>().ConvertUsing((entity, c, context) =>
             {
                 var intermediate = context.Mapper.Map<ProjectResource>(entity);

@@ -17,13 +17,15 @@ namespace Projects.Services
         public IInvoiceService _invoiceService;
         public IMemoryCache _memoryCache;
         public IMapper _mapper;
+        public IProjectContactService _projectContactService;
 
-        public ProjectDetailsFactory(IProjectService projectService, IInvoiceService invoiceService, IMemoryCache memoryCache, IMapper mapper)
+        public ProjectDetailsFactory(IProjectService projectService, IInvoiceService invoiceService, IMemoryCache memoryCache, IMapper mapper, IProjectContactService contactService)
         {
             _projectService = projectService;
             _invoiceService = invoiceService;
             _memoryCache = memoryCache;
             _mapper = mapper;
+            _projectContactService = contactService;
         }
 
         public async Task<ProjectDetails> GetProject(string projectCode)
@@ -34,9 +36,11 @@ namespace Projects.Services
                 var projects = await _projectService.ListAsync(Jpp.Projects.Company.All);
                 Project? target = projects.FirstOrDefault(p => p.Code == projectCode);               
 
-
                 ProjectDetails details = _mapper.Map<Project, ProjectDetails>(target);
                 details.Invoices = _mapper.Map<IList<InvoiceModel>, IList<Invoice>>(await _invoiceService.ListByProjectAsync(target.Code));
+
+                details.ProjectContacts = _mapper.Map<IList<ProjectContactModel>, IList<ProjectContact>>(await _projectContactService.ListByProjectAsync(target.Code));
+                details.ProjectOwners = details.ProjectContacts.Where(pc => pc.Role == Role.ProjectOwner).ToList();
 
                 return details;
             });            

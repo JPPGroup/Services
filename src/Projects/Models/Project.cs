@@ -1,27 +1,18 @@
 ﻿using System;
 using System.Data;
 
-namespace Jpp.Projects.Models
+namespace Jpp.Projects.Models 
 {
-    public class Project
+    public class Project : BaseModel
     {
-        private readonly DataRow row;
-
-        public Project(DataRow row)
-        {
-            this.row = row ?? throw new ArgumentNullException(nameof(row));
+        public Project(DataRow row) : base(row)
+        {            
         }
 
         public string Code => this.GetCode();
         public string Name => this.GetName();
         public int Category => this.GetCategory();
         public Company Company => this.GetCompany();
-
-        private bool TryGetRowValue(string field, out object rowValue)
-        {
-            rowValue = this.row[field];
-            return !DBNull.Value.Equals(rowValue);
-        }
 
         private string GetCode()
         {

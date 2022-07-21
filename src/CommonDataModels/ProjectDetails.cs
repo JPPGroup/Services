@@ -13,6 +13,9 @@ namespace CommonDataModels
         
         public FinanceCompany Company { get; set; }
 
+        public IList<ProjectContact> ProjectOwners { get; set; }
+        public IList<ProjectContact> ProjectContacts { get; set; }
+
         public IList<Invoice> Invoices { get; set; }
     }
 }
