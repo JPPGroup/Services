@@ -150,5 +150,57 @@ namespace Jpp.Projects.Services
 
             return list;
         }
+
+        public async Task<IList<ProjectWorkstageModel>> ListProjectWorkstages(string projectCode)
+        {
+            try
+            {
+                return await _cache.GetOrCreateAsync($"ProjectWorkstages{projectCode}", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+                    return GetWorkstages(projectCode);
+                });
+
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Unable to get project workstages.");
+                return new List<ProjectWorkstageModel>();
+            }
+        }
+
+        private async Task<List<ProjectWorkstageModel>> GetWorkstages(string ProjectCode)
+        {
+            return await Task.Run(() =>
+            {
+                string connectionString = _configuration.GetConnectionString("PIM");
+
+                using SqlConnection connection = new SqlConnection(connectionString);
+                var command = new SqlCommand($"SELECT [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[name], [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[abbreviation] FROM [DeltekPIM].[dbo].[EXVW_Finance_Workstages] INNER JOIN [DeltekPIM].[dbo].[EXVW_Project_Data] ON [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[entity_identifier] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] WHERE [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]='{ProjectCode}'");
+                command.Connection = connection;
+
+                using var dataSet = new DataSet("Workstages");
+                using var adapter = new SqlDataAdapter { SelectCommand = command };
+                adapter.Fill(dataSet);
+
+                return BuildWorkstageList(dataSet);
+            });
+        }
+
+        private static List<ProjectWorkstageModel> BuildWorkstageList(DataSet dataSet)
+        {
+            var list = new List<ProjectWorkstageModel>();
+            foreach (DataRow? row in dataSet.Tables[0].Rows)
+            {
+                if (row is null)
+                {
+                    continue;
+                }
+
+                list.Add(new ProjectWorkstageModel(row));
+            }
+
+            return list;
+        }
     }
 }

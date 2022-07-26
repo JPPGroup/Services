@@ -42,6 +42,8 @@ namespace Projects.Services
                 details.ProjectContacts = _mapper.Map<IList<ProjectContactModel>, IList<ProjectContact>>(await _projectContactService.ListByProjectAsync(target.Code));
                 details.ProjectOwners = details.ProjectContacts.Where(pc => pc.Role == Role.ProjectOwner).ToList();
 
+                details.Workstages = _mapper.Map<IList<ProjectWorkstageModel>, IList<ProjectWorkstage>>(await _projectService.ListProjectWorkstages(target.Code));
+
                 return details;
             });            
         }        
