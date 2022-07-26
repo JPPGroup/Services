@@ -9,5 +9,7 @@ namespace Jpp.Projects
         Task<IList<Project>> ListAsync(Company company);
 
         Task<IList<Project>> ListAsyncByUser(string firstname, string lastname);
+
+        Task<IList<ProjectWorkstageModel>> ListProjectWorkstages(string projectCode);
     }
 }

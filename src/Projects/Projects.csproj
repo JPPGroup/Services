@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <UserSecretsId>b7d02425-ee65-496e-bd87-81a82a795b3b</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <RootNamespace>Jpp.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -29,9 +29,6 @@ namespace Jpp.Projects.Controllers
         [SwaggerOperation(OperationId = "getProjectDetails")]
         public async Task<ProjectDetails> GetAsync(string projectCode)
         {
-            /*var projects = await _projectService.ListAsync(company);
-            var resources = _mapper.Map<IEnumerable<Project>, IEnumerable<ProjectResource>>(projects);
-            return resources;*/
             return await _factory.GetProject(projectCode);
         }
     }
