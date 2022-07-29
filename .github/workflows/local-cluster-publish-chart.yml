@@ -1,0 +1,51 @@
+name: Helm Build
+
+on:  
+  push:
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - chart-v*
+      
+    paths:
+      - 'deploy/localcluster/**'
+  workflow_dispatch:
+
+jobs:
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  push:
+    runs-on: ubuntu-latest    
+
+    steps:
+      - uses: actions/checkout@v2   
+
+      - name: Helm | Login
+        shell: bash
+        run: echo "${{ secrets.CR_PAT }}" | helm registry login ghcr.io/${{ github.repository_owner }} -u ${{ github.actor }} --password-stdin ${{ inputs.registry }}
+        env:
+          HELM_EXPERIMENTAL_OCI: '1'
+
+      - name: Helm | Package
+        shell: bash
+        run: |
+          helm package deploy/localcluster/
+        env:
+          HELM_EXPERIMENTAL_OCI: '1'
+
+      - name: Helm | Push
+        shell: bash
+        run: |
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^chart-v//')          
+          helm push localcluster-$VERSION.tgz oci://ghcr.io/jppgroup
+        env:
+          HELM_EXPERIMENTAL_OCI: '1'
+
+      - name: Helm | Logout
+        shell: bash
+        run: helm registry logout ghcr.io/${{ github.repository_owner }}
+        env:
+          HELM_EXPERIMENTAL_OCI: '1'
