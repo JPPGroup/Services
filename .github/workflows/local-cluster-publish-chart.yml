@@ -28,7 +28,7 @@ jobs:
       - name: Helm | Package
         shell: bash
         run: |
-          helm package deploy/localcluster/
+          helm package deploy/localcluster/ --dependency-update  
         env:
           HELM_EXPERIMENTAL_OCI: '1'
 

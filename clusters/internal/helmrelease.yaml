@@ -18,11 +18,13 @@ spec:
   chart:
     spec:
       chart: localcluster
-      version: '>0.2.0'
+      version: '0.3.2'
       sourceRef:
         kind: HelmRepository
         name: jppcorerepo
         namespace: default
       interval: 5m
+  dependsOn:
+    - name: traefik
   values:
     replicaCount: 2
