@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
+LABEL org.opencontainers.image.source https://github.com/JPPGroup/Services
 COPY Projects/openssl.cnf /etc/ssl/openssl.cnf
 WORKDIR /app
 EXPOSE 80

@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 buildID: "tbc"
 
+projects:
+  imageVersion: 0.3.2
+
 rabbitmq:
   extraConfiguration: |-
     management.path_prefix = /mqadmin/
