@@ -1,38 +1,42 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: jppcorerepo
+  name: postgresqlrepo
   namespace: default
-spec:
-  type: oci
+spec:  
   interval: 5m0s
-  url: oci://ghcr.io/jppgroup
+  url: https://charts.bitnami.com/bitnami
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: jppcore
+  name: postgresql
   namespace: default
 spec:
   interval: 5m
   chart:
     spec:
-      chart: localcluster
-      version: '>=0.3.0'
+      chart: postgresql
+      version: '>11.0.0'
       sourceRef:
         kind: HelmRepository
-        name: jppcorerepo
+        name: postgresqlrepo
         namespace: default
       interval: 5m
   install:
+    crds: CreateReplace
     remediation:
       retries: 2
   upgrade:
+    crds: CreateReplace
     remediation:
       retries: 3
       remediateLastFailure: true
-  dependsOn:
-    - name: traefik
   values:
-    projects:
-      imageVersion: 0.3.3
+    global:
+      postgresql:
+        auth:
+          postgresPassword: Is92n$8&z^EI
+          username: aspnetuser
+          password: Wh97G@3!pCeA
+          database: aspnet-ProjectManager
