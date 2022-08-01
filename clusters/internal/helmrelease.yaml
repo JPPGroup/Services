@@ -18,12 +18,19 @@ spec:
   chart:
     spec:
       chart: localcluster
-      version: '0.3.2'
+      version: '>=0.3.0'
       sourceRef:
         kind: HelmRepository
         name: jppcorerepo
         namespace: default
       interval: 5m
+  install:
+    remediation:
+      retries: 2
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
   dependsOn:
     - name: traefik
   values:
