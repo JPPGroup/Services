@@ -8,6 +8,8 @@ namespace Jpp.Projects
 {
     public interface IInvoiceService
     {
-        Task<IList<InvoiceModel>> ListByProjectAsync(string ProjectId);        
+        Task<IList<InvoiceModel>> ListByProjectAsync(string ProjectId);
+
+        Task<IList<InvoiceModel>> ListByProjectsAsync(IEnumerable<string> ProjectIds);
     }
 }

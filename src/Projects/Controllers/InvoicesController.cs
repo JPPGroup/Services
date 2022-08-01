@@ -44,12 +44,13 @@ namespace Projects.Controllers
         [SwaggerOperation(OperationId = "getCompanyUnpaidInvoices")]
         public async IAsyncEnumerable<Invoice> GetUnpaidAsync(Company company)
         {
-            var projects = await _projectService.ListAsync(company);            
+            var projects = await _projectService.ListAsync(company);
+            List<string> projectCodes = new List<string>();
 
             foreach (Project p in projects)
             {
 
-                var invoices = await _invoiceService.ListByProjectAsync(p.Code);
+                /*var invoices = await _invoiceService.ListByProjectAsync(p.Code);
                 var resources = _mapper.Map<IEnumerable<InvoiceModel>, IEnumerable<Invoice>>(invoices);
                 foreach (Invoice invoice in resources)
                 {
@@ -57,8 +58,22 @@ namespace Projects.Controllers
                     {
                         yield return invoice;
                     }
-                }
+                }*/
+
+                projectCodes.Add(p.Code);
             }
+
+            var invoices = await _invoiceService.ListByProjectsAsync(projectCodes);            
+
+            foreach (InvoiceModel invoice in invoices)
+            {
+                Invoice i = _mapper.Map<InvoiceModel, Invoice>(invoice);
+
+                if (invoice.TotalUnpaid > 0)
+                {
+                    yield return i;
+                }
+            }            
         }
     }
 }
