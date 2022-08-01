@@ -22,6 +22,9 @@ namespace Projects.Models
         public string? InternalNotes { get { return TryGetRowValue("Internal_Notes", out var rowValue) ? (string)rowValue : null; } }
         public string? FinanceNotes { get { return TryGetRowValue("FDNotes", out var rowValue) ? (string)rowValue : null; } }
 
+        public string? ProjectCode { get { return TryGetRowValue("Project_Code", out var rowValue) ? (string)rowValue : null; } }
+        public string? ProjectName { get { return TryGetRowValue("Name", out var rowValue) ? (string)rowValue : null; } }
+
         public InvoiceModel(DataRow row)
         {
             this.row = row ?? throw new ArgumentNullException(nameof(row));
