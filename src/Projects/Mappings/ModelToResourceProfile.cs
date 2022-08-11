@@ -19,7 +19,8 @@ namespace Jpp.Projects.Mappings
                 .ForMember(r => r.Category, map => map.MapFrom(m => ((Category)m.Category).ToDescription()))
                 .AfterMap(BuildFolderProperties);
 
-            CreateMap<InvoiceModel, Invoice>();
+            CreateMap<InvoiceModel, Invoice>().ForMember(im => im.Draft, o => o.MapFrom<bool>(src => false));
+            CreateMap<DraftInvoiceModel, Invoice>().ForMember(im => im.Draft, o => o.MapFrom<bool>(src => true));
 
             CreateMap<ProjectResource, ProjectDetails>();
 
