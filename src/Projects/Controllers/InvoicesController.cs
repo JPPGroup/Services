@@ -32,48 +32,54 @@ namespace Projects.Controllers
         [HttpGet]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(IEnumerable<Invoice>))]
         [SwaggerOperation(OperationId = "getProjectInvoices")]
-        public async Task<IEnumerable<Invoice>> GetAsync(string projectCode)
+        public async Task<IEnumerable<Invoice>> GetAsync(string projectCode, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            var invoices = await _invoiceService.ListByProjectAsync(projectCode);
+            var invoices = await _invoiceService.ListByProjectAsync(projectCode, fromDate, toDate);
             var resources = _mapper.Map<IEnumerable<InvoiceModel>, IEnumerable<Invoice>>(invoices);
             return resources;
         }
 
-        [HttpGet("overdue")]
+        [HttpGet("bycompany")]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(IEnumerable<Invoice>))]
-        [SwaggerOperation(OperationId = "getCompanyUnpaidInvoices")]
-        public async IAsyncEnumerable<Invoice> GetUnpaidAsync(Company company)
+        [SwaggerOperation(OperationId = "getCompanyInvoices")]
+        public async IAsyncEnumerable<Invoice> GetUnpaidAsync(Company company, bool unpaidonly = false, bool includedrafts = false, DateTime? fromDate = null, DateTime? toDate = null)
         {
             var projects = await _projectService.ListAsync(company);
             List<string> projectCodes = new List<string>();
 
             foreach (Project p in projects)
             {
-
-                /*var invoices = await _invoiceService.ListByProjectAsync(p.Code);
-                var resources = _mapper.Map<IEnumerable<InvoiceModel>, IEnumerable<Invoice>>(invoices);
-                foreach (Invoice invoice in resources)
-                {
-                    if (invoice.TotalUnpaid > 0)
-                    {
-                        yield return invoice;
-                    }
-                }*/
-
                 projectCodes.Add(p.Code);
             }
 
-            var invoices = await _invoiceService.ListByProjectsAsync(projectCodes);            
+            var invoices = await _invoiceService.ListByProjectsAsync(projectCodes, fromDate, toDate);            
 
             foreach (InvoiceModel invoice in invoices)
             {
                 Invoice i = _mapper.Map<InvoiceModel, Invoice>(invoice);
 
-                if (invoice.TotalUnpaid > 0)
+                if (unpaidonly)
+                {
+                    if (invoice.TotalUnpaid > 0)
+                    {
+                        yield return i;
+                    }
+                } else
                 {
                     yield return i;
                 }
-            }            
+            }       
+            
+            if(includedrafts)
+            {
+                var draftinvoices = await _invoiceService.ListDraftsByProjectsAsync(projectCodes, fromDate, toDate) ;
+
+                foreach (DraftInvoiceModel invoice in draftinvoices)
+                {
+                    Invoice i = _mapper.Map<DraftInvoiceModel, Invoice>(invoice);
+                    yield return i;
+                }
+            }
         }
     }
 }

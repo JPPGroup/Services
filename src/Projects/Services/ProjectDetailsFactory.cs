@@ -37,7 +37,7 @@ namespace Projects.Services
                 Project? target = projects.FirstOrDefault(p => p.Code == projectCode);               
 
                 ProjectDetails details = _mapper.Map<Project, ProjectDetails>(target);
-                details.Invoices = _mapper.Map<IList<InvoiceModel>, IList<Invoice>>(await _invoiceService.ListByProjectAsync(target.Code));
+                details.Invoices = _mapper.Map<IList<InvoiceModel>, IList<Invoice>>(await _invoiceService.ListByProjectAsync(target.Code, null, null));
 
                 details.ProjectContacts = _mapper.Map<IList<ProjectContactModel>, IList<ProjectContact>>(await _projectContactService.ListByProjectAsync(target.Code));
                 details.ProjectOwners = details.ProjectContacts.Where(pc => pc.Role == Role.ProjectOwner).ToList();

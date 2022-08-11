@@ -10,7 +10,7 @@ namespace Projects.Models
         public DateTime? InvoiceDate { get { return TryGetRowValue("Document_Date", out var rowValue) ? (DateTime)rowValue : null; } }
 
         public string? Client { get { return TryGetRowValue("Client", out var rowValue) ? (string)rowValue : null; } }
-
+                
         public DateTime? DueDate { get { return TryGetRowValue("Due_Date", out var rowValue) ? (DateTime)rowValue : null; } }
         public DateTime? ExportedDate { get { return TryGetRowValue("Exported_Date", out var rowValue) ? (DateTime)rowValue : null; } }
 
