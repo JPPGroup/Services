@@ -25,6 +25,9 @@ namespace Projects.Models
         public string? ProjectCode { get { return TryGetRowValue("Project_Code", out var rowValue) ? (string)rowValue : null; } }
         public string? ProjectName { get { return TryGetRowValue("Name", out var rowValue) ? (string)rowValue : null; } }
 
+        public string? Forename { get { return TryGetRowValue("Forename", out var rowValue) ? (string)rowValue : null; } }
+        public string? Surname { get { return TryGetRowValue("Surname", out var rowValue) ? (string)rowValue : null; } }
+
         public InvoiceModel(DataRow row)
         {
             this.row = row ?? throw new ArgumentNullException(nameof(row));

@@ -35,4 +35,4 @@ spec:
     - name: traefik
   values:
     projects:
-      imageVersion: 0.4.0
+      imageVersion: 0.4.1

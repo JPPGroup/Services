@@ -24,5 +24,8 @@ namespace CommonDataModels
         public string? Notes { get; set; }
         public string? InternalNotes { get; set; }
         public string? FinanceNotes { get; set; }
+
+        public string? Forename { get; set; }
+        public string? Surname { get; set; }
     }
 }

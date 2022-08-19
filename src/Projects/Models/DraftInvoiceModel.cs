@@ -20,6 +20,9 @@ namespace Jpp.Projects.Models
 
         private string? invoiceXML { get { return TryGetRowValue("Invoice_XML", out var rowValue) ? (string)rowValue : null; } }
 
+        public string? Forename { get { return TryGetRowValue("Forename", out var rowValue) ? (string)rowValue : null; } }
+        public string? Surname { get { return TryGetRowValue("Surname", out var rowValue) ? (string)rowValue : null; } }
+
         public DraftInvoiceModel(DataRow row)
         {
             this.row = row ?? throw new ArgumentNullException(nameof(row));
