@@ -25,6 +25,10 @@ namespace Jpp.Projects.Mappings
             CreateMap<DraftInvoiceModel, Invoice>().ForMember(im => im.Draft, o => o.MapFrom<bool>(src => true));
             CreateMap<InvoiceModel, Invoice>().ForMember(im => im.InvoiceType, o => o.MapFrom<InvoiceType>(src => GetInvoiceType(src.DocumentType)));
 
+            CreateMap<PurchaseOrderModel, PurchaseOrder>();
+            CreateMap<PurchaseOrderLinesModel, PurchaseOrderLines>();
+            CreateMap<PurchaseOrderLineInvoiceModel, PurchaseOrderLineInvoice>();
+
             CreateMap<ProjectResource, ProjectDetails>();
 
             CreateMap<ProjectContactModel, ProjectContact>();

@@ -19,5 +19,6 @@ namespace CommonDataModels
         public IList<ProjectContact> ProjectContacts { get; set; }
 
         public IList<Invoice> Invoices { get; set; }
+        public IList<PurchaseOrder> PurchaseOrders { get; set; }
     }
 }
