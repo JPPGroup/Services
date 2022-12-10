@@ -51,7 +51,7 @@ namespace Projects.Controllers
             {
                 projectCodes.Add(p.Code);
             }
-
+            
             var invoices = await _invoiceService.ListByProjectsAsync(projectCodes, fromDate, toDate);            
 
             foreach (InvoiceModel invoice in invoices)
@@ -60,7 +60,7 @@ namespace Projects.Controllers
 
                 if (unpaidonly)
                 {
-                    if (invoice.TotalUnpaid > 0)
+                    if (invoice.TotalUnpaid != 0)
                     {
                         yield return i;
                     }

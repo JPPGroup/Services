@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 namespace CommonDataModels
 {
     public class Invoice
-    {        
+    {
         public DateTime? InvoiceDate { get; set; }
         public string? Client { get; set; }
         public string? ProjectCode { get; set; }
         public string? ProjectName { get; set; }
-        
+
+        public string Reference { get; set; }
+
         public DateTime? DueDate { get; set; }
         public DateTime? ExportedDate { get; set; }
         public bool Draft { get; set; }
@@ -25,7 +27,12 @@ namespace CommonDataModels
         public string? InternalNotes { get; set; }
         public string? FinanceNotes { get; set; }
 
-        public string? Forename { get; set; }
-        public string? Surname { get; set; }
+        public InvoiceType InvoiceType { get; set; }
+    }
+
+    public enum InvoiceType
+    {
+        Invoice,
+        CreditNote
     }
 }
