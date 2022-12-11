@@ -80,7 +80,7 @@ namespace Jpp.Projects.Services
 
                 using SqlConnection connection = new SqlConnection(connectionString);
                 var command = new SqlCommand();
-                command.CommandText = $"SELECT * FROM [DeltekPIM].[dbo].[EXVW_Project_Invoice_Exported] WHERE [Project_Code]='{ProjectId}'";
+                command.CommandText = $"SELECT * FROM [DeltekPIM].[dbo].[EXVW_Project_Invoice_Exported_No_Contacts] WHERE [Project_Code]='{ProjectId}'";
                 command.Connection = connection;
 
                 using var dataSet = new DataSet("Invoices");
@@ -100,7 +100,7 @@ namespace Jpp.Projects.Services
                 using SqlConnection connection = new SqlConnection(connectionString);
                 var command = new SqlCommand();
                                 
-                StringBuilder sb = new StringBuilder("SELECT * FROM [DeltekPIM].[dbo].[EXVW_Project_Invoice_Exported] WHERE [Project_Code] in (");
+                StringBuilder sb = new StringBuilder("SELECT * FROM [DeltekPIM].[dbo].[EXVW_Project_Invoice_Exported_No_Contacts] WHERE [Project_Code] in (");
 
                 sb.Append($"'{ProjectIds.ElementAt(0)}'");
 

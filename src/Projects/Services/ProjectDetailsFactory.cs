@@ -18,11 +18,13 @@ namespace Projects.Services
         public IMemoryCache _memoryCache;
         public IMapper _mapper;
         public IProjectContactService _projectContactService;
+        public IPurchaseOrderService _purchaseOrderService;
 
-        public ProjectDetailsFactory(IProjectService projectService, IInvoiceService invoiceService, IMemoryCache memoryCache, IMapper mapper, IProjectContactService contactService)
+        public ProjectDetailsFactory(IProjectService projectService, IInvoiceService invoiceService, IMemoryCache memoryCache, IMapper mapper, IProjectContactService contactService, IPurchaseOrderService poService)
         {
             _projectService = projectService;
             _invoiceService = invoiceService;
+            _purchaseOrderService = poService;
             _memoryCache = memoryCache;
             _mapper = mapper;
             _projectContactService = contactService;
@@ -38,6 +40,7 @@ namespace Projects.Services
 
                 ProjectDetails details = _mapper.Map<Project, ProjectDetails>(target);
                 details.Invoices = _mapper.Map<IList<InvoiceModel>, IList<Invoice>>(await _invoiceService.ListByProjectAsync(target.Code, null, null));
+                details.PurchaseOrders = _mapper.Map<IList<PurchaseOrderModel>, IList<PurchaseOrder>>(await _purchaseOrderService.ListByProjectsAsync(new[] { target.Code }, null, null));
 
                 details.ProjectContacts = _mapper.Map<IList<ProjectContactModel>, IList<ProjectContact>>(await _projectContactService.ListByProjectAsync(target.Code));
                 details.ProjectOwners = details.ProjectContacts.Where(pc => pc.Role == Role.ProjectOwner).ToList();

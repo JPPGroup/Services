@@ -25,8 +25,9 @@ namespace Projects.Models
         public string? ProjectCode { get { return TryGetRowValue("Project_Code", out var rowValue) ? (string)rowValue : null; } }
         public string? ProjectName { get { return TryGetRowValue("Name", out var rowValue) ? (string)rowValue : null; } }
 
-        public string? Forename { get { return TryGetRowValue("Forename", out var rowValue) ? (string)rowValue : null; } }
-        public string? Surname { get { return TryGetRowValue("Surname", out var rowValue) ? (string)rowValue : null; } }
+        public string? Reference { get { return TryGetRowValue("Reference", out var rowValue) ? (string)rowValue : null; } }
+
+        public string? DocumentType { get { return TryGetRowValue("Document_Type", out var rowValue) ? (string)rowValue : null; } }
 
         public InvoiceModel(DataRow row)
         {

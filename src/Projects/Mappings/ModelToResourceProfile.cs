@@ -5,6 +5,7 @@ using Jpp.Projects.Models;
 using Jpp.Projects.Resources;
 using Projects.Models;
 using CommonDataModels;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace Jpp.Projects.Mappings
 {
@@ -20,7 +21,13 @@ namespace Jpp.Projects.Mappings
                 .AfterMap(BuildFolderProperties);
 
             CreateMap<InvoiceModel, Invoice>().ForMember(im => im.Draft, o => o.MapFrom<bool>(src => false));
+            CreateMap<InvoiceModel, Invoice>().ForMember(im => im.InvoiceType, o => o.MapFrom<InvoiceType>(src => GetInvoiceType(src.DocumentType)));
             CreateMap<DraftInvoiceModel, Invoice>().ForMember(im => im.Draft, o => o.MapFrom<bool>(src => true));
+            CreateMap<InvoiceModel, Invoice>().ForMember(im => im.InvoiceType, o => o.MapFrom<InvoiceType>(src => GetInvoiceType(src.DocumentType)));
+
+            CreateMap<PurchaseOrderModel, PurchaseOrder>();
+            CreateMap<PurchaseOrderLinesModel, PurchaseOrderLines>();
+            CreateMap<PurchaseOrderLineInvoiceModel, PurchaseOrderLineInvoice>();
 
             CreateMap<ProjectResource, ProjectDetails>();
 
@@ -80,6 +87,23 @@ namespace Jpp.Projects.Mappings
             var upper = lower + (SPACING - 1);
 
             return $"{lower}-{upper}";
+        }
+
+        private static InvoiceType GetInvoiceType(string documentType)
+        {
+
+            switch (documentType)
+            {
+                case "Invoice":
+                    return InvoiceType.Invoice;
+
+                case "Credit Note":
+                    return InvoiceType.CreditNote;
+
+                default:
+                    throw new ArgumentException($"Uknonw invoice type {documentType}");
+            }
+
         }
     }
 }

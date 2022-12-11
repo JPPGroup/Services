@@ -20,12 +20,14 @@ namespace Projects.Controllers
     {
         private readonly IInvoiceService _invoiceService;
         private readonly IProjectService _projectService;
+        private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly IMapper _mapper;
 
-        public InvoicesController(IInvoiceService invoiceService, IProjectService projectService, IMapper mapper)
+        public InvoicesController(IInvoiceService invoiceService, IProjectService projectService, IMapper mapper, IPurchaseOrderService poService)
         {
             _invoiceService = invoiceService ?? throw new ArgumentNullException(nameof(invoiceService));
             _projectService = projectService ?? throw new ArgumentNullException(nameof(projectService));
+            _purchaseOrderService = poService ?? throw new ArgumentNullException(nameof(poService)); ;
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -51,7 +53,7 @@ namespace Projects.Controllers
             {
                 projectCodes.Add(p.Code);
             }
-
+            
             var invoices = await _invoiceService.ListByProjectsAsync(projectCodes, fromDate, toDate);            
 
             foreach (InvoiceModel invoice in invoices)
@@ -60,7 +62,7 @@ namespace Projects.Controllers
 
                 if (unpaidonly)
                 {
-                    if (invoice.TotalUnpaid > 0)
+                    if (invoice.TotalUnpaid != 0)
                     {
                         yield return i;
                     }
@@ -79,6 +81,29 @@ namespace Projects.Controllers
                     Invoice i = _mapper.Map<DraftInvoiceModel, Invoice>(invoice);
                     yield return i;
                 }
+            }
+        }
+
+        [HttpGet("incomingbycompany")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(IEnumerable<Invoice>))]
+        [SwaggerOperation(OperationId = "getIncomingCompanyInvoices")]
+        public async IAsyncEnumerable<PurchaseOrderLineInvoice> GetIncomingAsync(Company company, bool includedrafts = false, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            var projects = await _projectService.ListAsync(company);
+            List<string> projectCodes = new List<string>();
+
+            foreach (Project p in projects)
+            {
+                projectCodes.Add(p.Code);
+            }
+
+            var invoices = await _purchaseOrderService.ListInvoicesByProjectsAsync(projectCodes, fromDate, toDate);            
+
+            foreach (PurchaseOrderLineInvoiceModel invoice in invoices)
+            {
+                PurchaseOrderLineInvoice i = _mapper.Map<PurchaseOrderLineInvoiceModel, PurchaseOrderLineInvoice>(invoice);
+
+                yield return i;
             }
         }
     }

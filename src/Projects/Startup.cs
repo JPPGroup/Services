@@ -29,6 +29,7 @@ namespace Jpp.Projects
             services.AddSingleton<IProjectService, ProjectService>();
             services.AddSingleton<IInvoiceService, InvoiceService>();
             services.AddSingleton<IProjectContactService, ProjectContactService>();
+            services.AddSingleton<IPurchaseOrderService, PurchaseOrderService>();
             services.AddSingleton<ProjectDetailsFactory>();
             services.AddAutoMapper(typeof(ModelToResourceProfile));
 
