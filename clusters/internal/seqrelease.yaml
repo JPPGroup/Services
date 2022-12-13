@@ -1,0 +1,49 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: seqrepo
+  namespace: default
+spec:
+  interval: 5m0s
+  url: https://helm.datalust.co
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seq
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: seq
+      version: '>=2022.1.0'
+      sourceRef:
+        kind: HelmRepository
+        name: seqrepo
+        namespace: default
+      interval: 5m
+  install:
+    remediation:
+      retries: 2
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true  
+  values:
+    ui:
+      ingress:
+        enabled: true
+        path: /seq/
+        hosts:
+          - services
+      
+    ingestion:
+      ingress:
+        enabled: true
+        path: /seqingest/
+        hosts:
+          - services
+  
+    persistence:
+      storageClass: local-path
