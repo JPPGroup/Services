@@ -34,16 +34,12 @@ spec:
     ui:
       ingress:
         enabled: true
-        path: /seq/
-        hosts:
-          - services
+        path: /seq        
       
     ingestion:
       ingress:
         enabled: true
-        path: /seqingest/
-        hosts:
-          - services
+        path: /seqingest
   
     persistence:
       storageClass: local-path
