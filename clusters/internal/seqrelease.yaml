@@ -36,18 +36,18 @@ spec:
         annotations:
           kubernetes.io/ingress.class: traefik    
         enabled: true
-        path: /seq
+        path: /seq/
         hosts:
-          - services
+          - "*"
       
     ingestion:
       ingress:
         annotations:
           kubernetes.io/ingress.class: traefik
         enabled: true
-        path: /seqingest
+        path: /seqingest/
         hosts:
-          - services
+          - "*"
   
     persistence:
       storageClass: local-path
