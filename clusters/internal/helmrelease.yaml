@@ -33,7 +33,6 @@ spec:
       remediateLastFailure: true
   dependsOn:
     - name: traefik
-    - name: seq
   values:
     projects:
       imageVersion: 0.4.2

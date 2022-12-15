@@ -35,19 +35,19 @@ spec:
       ingress:
         annotations:
           kubernetes.io/ingress.class: traefik    
-        enabled: false
-        path: /seq/
+        enabled: true
+        path: /
         hosts:
-          - 'services'
+          - 'seq.services.cedarbarn.local'
       
     ingestion:
       ingress:
         annotations:
           kubernetes.io/ingress.class: traefik
-        enabled: false
-        path: /seqingest/
+        enabled: true
+        path: /
         hosts:
-          - 'services'
+          - 'seq.services.cedarbarn.local'
   
     persistence:
       storageClass: local-path
