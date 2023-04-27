@@ -39,7 +39,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build src --file src/licensescanner/MigrateDockerfile --build-arg GITHUBSECRET=${{ secrets.GITHUB_TOKEN }}
+            docker build src --file src/LicenseScanner/MigrateDockerfile --build-arg GITHUBSECRET=${{ secrets.GITHUB_TOKEN }}
           fi
 
   # Push image to GitHub Packages.
@@ -57,7 +57,7 @@ jobs:
           submodules: 'recursive'
 
       - name: Build image
-        run: docker build src --file src/licensescanner/MigrateDockerfile --tag $IMAGE_NAME --build-arg GITHUBSECRET=${{ secrets.GITHUB_TOKEN }}
+        run: docker build src --file src/LicenseScanner/MigrateDockerfile --tag $IMAGE_NAME --build-arg GITHUBSECRET=${{ secrets.GITHUB_TOKEN }}
 
       - name: Log into GitHub Container Registry
       # TODO: Create a PAT with `read:packages` and `write:packages` scopes and save it as an Actions secret `CR_PAT`
