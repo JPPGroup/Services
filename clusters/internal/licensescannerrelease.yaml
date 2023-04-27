@@ -25,7 +25,7 @@ spec:
     - name: postgresql
   values:
     licensescanner:
-      imageVersion: 0.1.1
+      imageVersion: 0.1.2
       databaseaddress: postgresql
     global:
       postgresql:
