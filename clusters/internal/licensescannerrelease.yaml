@@ -1,13 +1,3 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: jpppmrepo
-  namespace: default
-spec:
-  type: oci
-  interval: 5m0s
-  url: oci://ghcr.io/jppgroup
----
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -21,7 +11,7 @@ spec:
       version: '>=0.1.0'
       sourceRef:
         kind: HelmRepository
-        name: jpppmrepo
+        name: jpphelmrepo
         namespace: default
       interval: 5m
   install:
@@ -34,7 +24,7 @@ spec:
   dependsOn:
     - name: postgresql
   values:
-    projectmanager:
+    licensescanner:
       imageVersion: 0.1.1
       databaseaddress: postgresql
     global:
