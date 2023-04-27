@@ -1,0 +1,13 @@
+licensescanner:
+  imageVersion: 0.1.1  
+  databaseaddress: "localhost"
+  prefix: "/licensescanner"
+  
+
+global:
+  postgresql:
+    auth:      
+      username: aspnetuser      
+      database: LicenseScanner
+      password: ""
+  

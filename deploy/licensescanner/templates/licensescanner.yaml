@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-licensescanner  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-licensescanner
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-licensescanner
+    spec:
+      containers:
+      - name: licensescanner       
+        image: ghcr.io/jppgroup/licensescanner:{{ .Values.licensescanner.imageVersion }}
+        args: ["run"]
+        ports:
+        - containerPort: 80
+        env:
+        - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+          value: "Host={{ .Values.licensescanner.databaseaddress }};Database={{ .Values.global.postgresql.auth.database }};Username={{ .Values.global.postgresql.auth.username }};Password={{ .Values.global.postgresql.auth.password }}"
+        - name: ASPNETCORE_PathBase
+          value: "{{ .Values.licensescanner.prefix }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-licensescanner
+spec:
+  selector:
+    app: {{ .Release.Name }}-licensescanner
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: {{ .Release.Name }}-licensescanner-ingress
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix(`{{ .Values.licensescanner.prefix }}/`)        
+      services:
+        - kind: Service
+          name: {{ .Release.Name }}-licensescanner
+          namespace: default
+          port: 80
+          

@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-licensescannermigrationjob
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+spec:  
+  template:
+    metadata:
+      name: {{ .Release.Name }}-licensescannermigration      
+    spec:
+      restartPolicy: Never    
+      containers:
+      - name: licensescannermigration     
+        image: ghcr.io/jppgroup/licensescannermigration:{{ .Values.licensescanner.imageVersion }}       
+        env:
+        - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+          value: "Host={{ .Values.licensescanner.databaseaddress }};Database={{ .Values.global.postgresql.auth.database }};Username={{ .Values.global.postgresql.auth.username }};Password={{ .Values.global.postgresql.auth.password }}"
