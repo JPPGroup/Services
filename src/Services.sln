@@ -9,7 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBlazor", "SharedBlazo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projects", "Projects\Projects.csproj", "{6AC818FF-C757-4357-92AF-2779AA0B6EBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonDataModels", "CommonDataModels\CommonDataModels.csproj", "{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonDataModels", "CommonDataModels\CommonDataModels.csproj", "{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseScanner", "LicenseScanner\LicenseScanner.csproj", "{5FBB6AC5-7B91-4505-8969-7B61B84C3FDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseScannerAgent", "LicenseScannerAgent\LicenseScannerAgent.csproj", "{BC8BA3D2-1BAD-41F5-ADF9-628ED20685C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licenses", "Licenses", "{6231096E-0A40-43A2-8771-EA3C44D7C790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseContext", "LicenseContext\LicenseContext.csproj", "{FF013B5E-16D4-4187-A0B3-60203E3C9C55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseScannerPostgresqlMigrations", "LicenseScannerPostgresqlMigrations\LicenseScannerPostgresqlMigrations.csproj", "{56DD489F-D19C-4372-894A-CADE9EDAEB5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +43,31 @@ Global
 		{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D878C770-8307-4CFF-9941-F6CEC6EAEE6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FBB6AC5-7B91-4505-8969-7B61B84C3FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FBB6AC5-7B91-4505-8969-7B61B84C3FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FBB6AC5-7B91-4505-8969-7B61B84C3FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FBB6AC5-7B91-4505-8969-7B61B84C3FDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC8BA3D2-1BAD-41F5-ADF9-628ED20685C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC8BA3D2-1BAD-41F5-ADF9-628ED20685C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC8BA3D2-1BAD-41F5-ADF9-628ED20685C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC8BA3D2-1BAD-41F5-ADF9-628ED20685C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF013B5E-16D4-4187-A0B3-60203E3C9C55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF013B5E-16D4-4187-A0B3-60203E3C9C55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF013B5E-16D4-4187-A0B3-60203E3C9C55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF013B5E-16D4-4187-A0B3-60203E3C9C55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56DD489F-D19C-4372-894A-CADE9EDAEB5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56DD489F-D19C-4372-894A-CADE9EDAEB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56DD489F-D19C-4372-894A-CADE9EDAEB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56DD489F-D19C-4372-894A-CADE9EDAEB5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5FBB6AC5-7B91-4505-8969-7B61B84C3FDC} = {6231096E-0A40-43A2-8771-EA3C44D7C790}
+		{BC8BA3D2-1BAD-41F5-ADF9-628ED20685C3} = {6231096E-0A40-43A2-8771-EA3C44D7C790}
+		{FF013B5E-16D4-4187-A0B3-60203E3C9C55} = {6231096E-0A40-43A2-8771-EA3C44D7C790}
+		{56DD489F-D19C-4372-894A-CADE9EDAEB5E} = {6231096E-0A40-43A2-8771-EA3C44D7C790}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D904AFAF-2FF1-4CA6-B219-F553D81FC237}
