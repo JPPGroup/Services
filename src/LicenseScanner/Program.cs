@@ -28,6 +28,12 @@ namespace LicenseScanner
 
             var app = builder.Build();
 
+            string? pathBase = builder.Configuration.GetValue<string?>("PathBase");
+            if (!string.IsNullOrEmpty(pathBase))
+            {
+                app.UsePathBase(pathBase);
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
