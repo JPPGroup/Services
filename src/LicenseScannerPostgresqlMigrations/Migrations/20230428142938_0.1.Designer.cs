@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LicenseScannerPostgresqlMigrations.Migrations
 {
     [DbContext(typeof(LicenseContext))]
-    [Migration("20230427135115_0.1")]
+    [Migration("20230428142938_0.1")]
     partial class _01
     {
         /// <inheritdoc />
