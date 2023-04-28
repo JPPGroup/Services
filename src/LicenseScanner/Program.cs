@@ -17,8 +17,8 @@ namespace LicenseScanner
 #if DEBUG
                 options.UseSqlServer(connectionString, x => x.MigrationsAssembly("LicenseScanner"));
 #else
-                options.UseNpgsql(connectionString, x => x.MigrationsAssembly("LicenseScannerPostgresqlMigrations"));                                                
-#endif                
+                options.UseNpgsql(connectionString, x => x.MigrationsAssembly("LicenseScannerPostgresqlMigrations"));
+#endif
             });
             builder.Services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); ;
@@ -27,6 +27,8 @@ namespace LicenseScanner
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            var logger = app.Services.GetService<ILogger<Program>>();
+            logger.LogInformation("Connection string used: {0}", connectionString);
 
             string? pathBase = builder.Configuration.GetValue<string?>("PathBase");
             if (!string.IsNullOrEmpty(pathBase))
@@ -34,10 +36,11 @@ namespace LicenseScanner
                 app.UsePathBase(pathBase);
             }
 
+            app.UseSwagger();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
