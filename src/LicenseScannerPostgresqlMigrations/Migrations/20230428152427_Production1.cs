@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LicenseScannerPostgresqlMigrations.Migrations
 {
     /// <inheritdoc />
-    public partial class _01 : Migration
+    public partial class Production1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

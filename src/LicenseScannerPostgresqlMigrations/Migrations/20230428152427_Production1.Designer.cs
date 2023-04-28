@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LicenseScannerPostgresqlMigrations.Migrations
 {
     [DbContext(typeof(LicenseContext))]
-    [Migration("20230428142938_0.1")]
-    partial class _01
+    [Migration("20230428152427_Production1")]
+    partial class Production1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
