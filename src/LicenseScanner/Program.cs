@@ -25,10 +25,17 @@ namespace LicenseScanner
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
             var app = builder.Build();
+
             var logger = app.Services.GetService<ILogger<Program>>();
             logger.LogInformation("Connection string used: {0}", connectionString);
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<LicenseContext>();
+                logger.LogInformation("Forced migration");
+                db.Database.Migrate();
+            }
 
             string? pathBase = builder.Configuration.GetValue<string?>("PathBase");
             if (!string.IsNullOrEmpty(pathBase))
