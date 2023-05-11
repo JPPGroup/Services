@@ -1,0 +1,13 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: istio-system
+  #labels:
+  #  name: test
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: default
+  labels:
+    istio-injection: enabled 
