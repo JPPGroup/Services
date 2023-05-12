@@ -51,3 +51,45 @@ spec:
   
     persistence:
       storageClass: local-path
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: seqroute
+  namespace: default
+spec:
+  parentRefs:
+  - name: main-gateway
+    sectionName: httpin
+    namespace: istio-system
+  hostnames:
+  - "seq.services.cedarbarn.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /    
+    backendRefs:
+    - name: seq
+      port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: seqadminroute
+  namespace: default
+spec:
+  parentRefs:
+  - name: main-gateway
+    sectionName: seqingestin
+    namespace: istio-system
+  hostnames:
+  - "seqingest.services.cedarbarn.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /    
+    backendRefs:
+    - name: seq
+      port: 5341

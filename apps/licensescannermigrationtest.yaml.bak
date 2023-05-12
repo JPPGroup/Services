@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: licensescannermigrationjobtest 
+
+spec:  
+  template:
+    metadata:
+      name: licensescannermigrationtest    
+    spec:
+      restartPolicy: Never    
+      containers:
+      - name: licensescannermigration     
+        image: ghcr.io/jppgroup/licensescannermigration:0.1.7  
+        env:
+        - name: ASPNETCORE_ConnectionStrings__DefaultConnection
+          value: "Host=postgresql;Database=LicenseScanner;Username=aspnetuser;Password=Wh97G@3!pCeA"
