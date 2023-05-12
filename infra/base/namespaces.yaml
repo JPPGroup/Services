@@ -11,3 +11,10 @@ metadata:
   name: default
   labels:
     istio-injection: enabled 
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: longhorn-system
+  #labels:
+  #  name: test
