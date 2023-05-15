@@ -36,3 +36,30 @@ spec:
   values:
     projects:
       imageVersion: 0.4.2
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: projectroute
+  namespace: default
+spec:
+  parentRefs:
+  - name: main-gateway
+    sectionName: httpin
+    namespace: istio-system
+  hostnames:
+  - "services.cedarbarn.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /projects    
+  - filters:
+    - type: URLRewrite
+      urlRewrite:          
+        path:
+          type: ReplacePrefixMatch
+          #replacePrefixMatch: /fennel
+    backendRefs:
+    - name: projects
+      port: 80
