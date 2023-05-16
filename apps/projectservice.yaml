@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projects  
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: projects
+  template:
+    metadata:
+      labels:
+        app: projects
+    spec:
+      containers:
+      - name: projects       
+        image: ghcr.io/jppgroup/projects:0.4.3
+        args: ["run"]
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80                      
+          periodSeconds: 15
+          initialDelaySeconds: 15
+        resources:
+          requests:
+            memory: "256M"
+            cpu: "0.25"
+          limits:
+            memory: "512M"
+            cpu: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: projects
+  namespace: default
+spec:
+  selector:
+    app: projects
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: projectroute
+  namespace: default
+spec:
+  parentRefs:
+  - name: main-gateway
+    sectionName: httpin
+    namespace: istio-system
+  hostnames:
+  - "services.cedarbarn.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /projects    
+#    filters:
+#    - type: URLRewrite
+#      urlRewrite:          
+#        path:
+#          type: ReplacePrefixMatch
+          #replacePrefixMatch: /fennel
+    backendRefs:
+    - name: projects
+      port: 80

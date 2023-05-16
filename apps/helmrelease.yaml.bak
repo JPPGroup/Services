@@ -54,11 +54,11 @@ spec:
     - path:
         type: PathPrefix
         value: /projects    
-    filters:
-    - type: URLRewrite
-      urlRewrite:          
-        path:
-          type: ReplacePrefixMatch
+#    filters:
+#    - type: URLRewrite
+#      urlRewrite:          
+#        path:
+#          type: ReplacePrefixMatch
           #replacePrefixMatch: /fennel
     backendRefs:
     - name: projects
