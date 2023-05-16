@@ -54,7 +54,7 @@ spec:
     - path:
         type: PathPrefix
         value: /projects    
-  - filters:
+    filters:
     - type: URLRewrite
       urlRewrite:          
         path:
