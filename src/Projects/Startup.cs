@@ -1,16 +1,15 @@
-using AutoMapper;
+using Jpp.Projects.Mappings;
+using Jpp.Projects.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Projects.Services;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Jpp.Projects.Mappings;
-using Jpp.Projects.Services;
-using Microsoft.OpenApi.Models;
-using Projects.Services;
 
 namespace Jpp.Projects
 {
@@ -53,7 +52,7 @@ namespace Jpp.Projects
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;                    
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
@@ -71,6 +70,8 @@ namespace Jpp.Projects
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UsePathBase("/projects");
+
             app.UseCors("CorsPolicy");
 
             app.UseSwagger();
@@ -79,7 +80,7 @@ namespace Jpp.Projects
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "JPP Web API v1");
                 c.RoutePrefix = string.Empty;
             });
-            
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
