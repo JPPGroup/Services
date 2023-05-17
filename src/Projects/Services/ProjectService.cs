@@ -84,7 +84,7 @@ namespace Jpp.Projects.Services
                 string connectionString = _configuration.GetConnectionString("PIM");
 
                 using SqlConnection connection = new SqlConnection(connectionString);
-                var command = new SqlCommand($"SELECT [Project_ID],[Contact_ID] ,[Active],[Forename],[Surname],[NT_User],[Project_Code],[DeltekPIM].[dbo].[EXVW_Project_Data].[Name],[Project_Category],[Finance_Company_ID] FROM[DeltekPIM].[dbo].[EXVW_Project_Contacts] INNER JOIN[DeltekPIM].[dbo].[EXVW_Project_Data] ON[DeltekPIM].[dbo].[EXVW_Project_Contacts].[Project_ID] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] JOIN [DeltekPIM].[dbo].[EXVW_Project_Service] ON [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]=[DeltekPIM].[dbo].[EXVW_Project_Service].[Expr1] WHERE UPPER([Forename]) LIKE UPPER('{firstname}') AND UPPER([Surname]) LIKE UPPER('{lastname}')");
+                var command = new SqlCommand($"SELECT [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID],[Contact_ID] ,[Active],[Forename],[Surname],[NT_User],[Project_Code],[DeltekPIM].[dbo].[EXVW_Project_Data].[Name],[Project_Category],[Finance_Company_ID] FROM[DeltekPIM].[dbo].[EXVW_Project_Contacts] INNER JOIN[DeltekPIM].[dbo].[EXVW_Project_Data] ON[DeltekPIM].[dbo].[EXVW_Project_Contacts].[Project_ID] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] JOIN [DeltekPIM].[dbo].[EXVW_Project_Service] ON [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]=[DeltekPIM].[dbo].[EXVW_Project_Service].[Expr1] WHERE UPPER([Forename]) LIKE UPPER('{firstname}') AND UPPER([Surname]) LIKE UPPER('{lastname}')");
                 command.Connection = connection;
 
                 using var dataSet = new DataSet("UserProjects");
