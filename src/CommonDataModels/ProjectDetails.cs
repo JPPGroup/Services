@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CommonDataModels
+﻿namespace CommonDataModels
 {
     public class ProjectDetails
     {
         public string Code { get; set; }
-        public string Name { get; set; }        
-        
+        public string Name { get; set; }
+
+        public string DeltekId { get; set; }
+
         public FinanceCompany Company { get; set; }
 
         public IList<ProjectWorkstage> Workstages { get; set; }

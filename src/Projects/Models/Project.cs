@@ -1,18 +1,19 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 
-namespace Jpp.Projects.Models 
+namespace Jpp.Projects.Models
 {
     public class Project : BaseModel
     {
         public Project(DataRow row) : base(row)
-        {            
+        {
         }
 
         public string Code => this.GetCode();
         public string Name => this.GetName();
         public int Category => this.GetCategory();
         public Company Company => this.GetCompany();
+
+        public string DeltekId => this.GetId();
 
         private string GetCode()
         {
@@ -22,6 +23,11 @@ namespace Jpp.Projects.Models
         private string GetName()
         {
             return this.TryGetRowValue("Name", out var rowValue) ? (string)rowValue : string.Empty;
+        }
+
+        private string GetId()
+        {
+            return this.TryGetRowValue("Project_ID", out var rowValue) ? ((int)rowValue).ToString() : string.Empty;
         }
 
         private int GetCategory()
@@ -55,7 +61,7 @@ namespace Jpp.Projects.Models
                     return (int)Projects.Category.ArchitectureRefurbishments;
 
                 default:
-                    return (int) Projects.Category.Other;
+                    return (int)Projects.Category.Other;
             }
         }
 

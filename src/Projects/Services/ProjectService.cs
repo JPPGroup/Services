@@ -1,12 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Jpp.Projects.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Jpp.Projects.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Jpp.Projects.Services
 {
@@ -84,14 +84,14 @@ namespace Jpp.Projects.Services
                 string connectionString = _configuration.GetConnectionString("PIM");
 
                 using SqlConnection connection = new SqlConnection(connectionString);
-                var command = new SqlCommand($"SELECT [Contact_ID] ,[Active],[Forename],[Surname],[NT_User],[Project_Code],[DeltekPIM].[dbo].[EXVW_Project_Data].[Name],[Project_Category],[Finance_Company_ID] FROM[DeltekPIM].[dbo].[EXVW_Project_Contacts] INNER JOIN[DeltekPIM].[dbo].[EXVW_Project_Data] ON[DeltekPIM].[dbo].[EXVW_Project_Contacts].[Project_ID] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] JOIN [DeltekPIM].[dbo].[EXVW_Project_Service] ON [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]=[DeltekPIM].[dbo].[EXVW_Project_Service].[Expr1] WHERE UPPER([Forename]) LIKE UPPER('{firstname}') AND UPPER([Surname]) LIKE UPPER('{lastname}')");
+                var command = new SqlCommand($"SELECT [Project_ID],[Contact_ID] ,[Active],[Forename],[Surname],[NT_User],[Project_Code],[DeltekPIM].[dbo].[EXVW_Project_Data].[Name],[Project_Category],[Finance_Company_ID] FROM[DeltekPIM].[dbo].[EXVW_Project_Contacts] INNER JOIN[DeltekPIM].[dbo].[EXVW_Project_Data] ON[DeltekPIM].[dbo].[EXVW_Project_Contacts].[Project_ID] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] JOIN [DeltekPIM].[dbo].[EXVW_Project_Service] ON [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]=[DeltekPIM].[dbo].[EXVW_Project_Service].[Expr1] WHERE UPPER([Forename]) LIKE UPPER('{firstname}') AND UPPER([Surname]) LIKE UPPER('{lastname}')");
                 command.Connection = connection;
 
                 using var dataSet = new DataSet("UserProjects");
                 using var adapter = new SqlDataAdapter { SelectCommand = command };
                 adapter.Fill(dataSet);
 
-                return BuildProjectList(dataSet);                
+                return BuildProjectList(dataSet);
             });
         }
 
@@ -103,32 +103,32 @@ namespace Jpp.Projects.Services
             {
                 case Company.All:
                     cmd.CommandText =
-                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%'";
+                        "SELECT Project_ID, EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%'";
                     break;
 
                 case Company.Consulting:
                     cmd.CommandText =
-                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 1";
+                        "SELECT Project_ID, EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 1";
                     break;
 
                 case Company.Geo:
                     cmd.CommandText =
-                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 2";
+                        "SELECT Project_ID, EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 2";
                     break;
 
                 case Company.SmithFoster:
                     cmd.CommandText =
-                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 5";
+                        "SELECT Project_ID, EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 5";
                     break;
 
                 case Company.Surveying:
                     cmd.CommandText =
-                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 3";
+                        "SELECT Project_ID, EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 3";
                     break;
 
                 case Company.WeArchitects:
                     cmd.CommandText =
-                        "SELECT EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 4";
+                        "SELECT Project_ID, EXVW_Project_Data.Project_Code, EXVW_Project_Data.Name, EXVW_Project_Data.Project_Category, EXVW_Project_Service.Finance_Company_ID FROM EXVW_Project_Data JOIN EXVW_Project_Service ON EXVW_Project_Data.Project_Code=EXVW_Project_Service.Expr1 WHERE Project_Code LIKE '[0-9]%' AND Finance_Company_ID = 4";
                     break;
             }
 

@@ -36,9 +36,10 @@ namespace Projects.Services
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
                 var projects = await _projectService.ListAsync(Jpp.Projects.Company.All);
-                Project? target = projects.FirstOrDefault(p => p.Code == projectCode);               
+                Project? target = projects.FirstOrDefault(p => p.Code == projectCode);
 
                 ProjectDetails details = _mapper.Map<Project, ProjectDetails>(target);
+                details.DeltekId = target.DeltekId;
                 details.Invoices = _mapper.Map<IList<InvoiceModel>, IList<Invoice>>(await _invoiceService.ListByProjectAsync(target.Code, null, null));
                 details.PurchaseOrders = _mapper.Map<IList<PurchaseOrderModel>, IList<PurchaseOrder>>(await _purchaseOrderService.ListByProjectsAsync(new[] { target.Code }, null, null));
 
@@ -48,7 +49,7 @@ namespace Projects.Services
                 details.Workstages = _mapper.Map<IList<ProjectWorkstageModel>, IList<ProjectWorkstage>>(await _projectService.ListProjectWorkstages(target.Code));
 
                 return details;
-            });            
-        }        
+            });
+        }
     }
 }
