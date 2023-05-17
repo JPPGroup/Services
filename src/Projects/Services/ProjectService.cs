@@ -176,7 +176,7 @@ namespace Jpp.Projects.Services
                 string connectionString = _configuration.GetConnectionString("PIM");
 
                 using SqlConnection connection = new SqlConnection(connectionString);
-                var command = new SqlCommand($"SELECT [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[name], [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[abbreviation] FROM [DeltekPIM].[dbo].[EXVW_Finance_Workstages] INNER JOIN [DeltekPIM].[dbo].[EXVW_Project_Data] ON [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[entity_identifier] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] WHERE [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]='{ProjectCode}'");
+                var command = new SqlCommand($"SELECT [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[name], [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[abbreviation], [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[reporting_total_fee], [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[total_invoices], [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[total_timecost_todate] FROM [DeltekPIM].[dbo].[EXVW_Finance_Workstages] INNER JOIN [DeltekPIM].[dbo].[EXVW_Project_Data] ON [DeltekPIM].[dbo].[EXVW_Finance_Workstages].[entity_identifier] = [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_ID] WHERE [DeltekPIM].[dbo].[EXVW_Project_Data].[Project_Code]='{ProjectCode}'");
                 command.Connection = connection;
 
                 using var dataSet = new DataSet("Workstages");
