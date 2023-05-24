@@ -1,4 +1,6 @@
-﻿namespace Jpp.Projects.Resources
+﻿using CommonDataModels;
+
+namespace Jpp.Projects.Resources
 {
     public class ProjectResource
     {
@@ -8,6 +10,9 @@
         public string Grouping { get; set; }
         public string Folder { get; set; }
         public string SharedMailPath { get; set; }
+
+        public ProjectStatus Status { get; set; }
+
         public Company Company { get; set; }
     }
 }

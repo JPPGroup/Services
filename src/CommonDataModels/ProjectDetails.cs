@@ -7,6 +7,8 @@
 
         public string DeltekId { get; set; }
 
+        public ProjectStatus Status { get; set; }
+
         public FinanceCompany Company { get; set; }
 
         public IList<ProjectWorkstage> Workstages { get; set; }
@@ -16,5 +18,13 @@
 
         public IList<Invoice> Invoices { get; set; }
         public IList<PurchaseOrder> PurchaseOrders { get; set; }
+    }
+
+    public enum ProjectStatus
+    {
+        Live,
+        Enquiry,
+        Completed,
+        Abandoned
     }
 }

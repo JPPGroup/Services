@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using CommonDataModels;
+using System;
+using System.Data;
 
 namespace Jpp.Projects.Models
 {
@@ -15,6 +17,8 @@ namespace Jpp.Projects.Models
 
         public string DeltekId => this.GetId();
 
+        public ProjectStatus Status => this.GetStatus();
+
         private string GetCode()
         {
             return this.TryGetRowValue("Project_Code", out var rowValue) ? (string)rowValue : string.Empty;
@@ -23,6 +27,25 @@ namespace Jpp.Projects.Models
         private string GetName()
         {
             return this.TryGetRowValue("Name", out var rowValue) ? (string)rowValue : string.Empty;
+        }
+
+        private ProjectStatus GetStatus()
+        {
+            int enumvalue = this.TryGetRowValue("Project_Status_ID", out var rowValue) ? (int)rowValue : throw new ArgumentOutOfRangeException($"Unknonw value {rowValue} returned for status");
+            switch (enumvalue)
+            {
+                case 2:
+                    return ProjectStatus.Enquiry;
+                case 4:
+                    return ProjectStatus.Live;
+                case 5:
+                    return ProjectStatus.Completed;
+                case 7:
+                    return ProjectStatus.Abandoned;
+
+                default:
+                    throw new ArgumentOutOfRangeException($"Unknown value {rowValue} returned for status");
+            }
         }
 
         private string GetId()
