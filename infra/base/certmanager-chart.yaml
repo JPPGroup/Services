@@ -1,0 +1,27 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: jetstackrepo
+  namespace: istio-system
+spec:
+  interval: 60m0s
+  url: https://charts.jetstack.io
+---  
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: certmanager
+  namespace: istio-system
+spec:
+  chart:
+    spec:
+      chart: cert-manager
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: jetstackrepo
+      version: ">=1.0.0"
+  values:
+    intallCRDs: true
+    extraArgs: "{--feature-gates=ExperimentalGatewayAPISupport=true}"
+  interval: 5m0s
