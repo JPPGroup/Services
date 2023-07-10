@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using System;
-using System.Linq;
+using CommonDataModels;
 using Jpp.Projects.Models;
 using Jpp.Projects.Resources;
 using Projects.Models;
-using CommonDataModels;
-using Microsoft.AspNetCore.Routing.Constraints;
+using System;
+using System.Linq;
 
 namespace Jpp.Projects.Mappings
 {
@@ -44,20 +43,36 @@ namespace Jpp.Projects.Mappings
 
         private static void BuildFolderProperties(Project source, ProjectResource destination)
         {
-            var baseFolder = GetBaseFolder(source.Code);
+            var baseFolder = GetBaseFolder(source.Code, source.Company);
             var grouping = GetGrouping(source.Code);
 
             destination.Grouping = grouping;
             destination.SharedMailPath = $@"{baseFolder}\{grouping}\{destination.Folder}";
         }
 
-        private static string GetBaseFolder(string projectCode)
+        private static string GetBaseFolder(string projectCode, Company company)
         {
-            var code = new string(projectCode.Where(char.IsDigit).ToArray());
+            switch (company)
+            {
+                case Company.Consulting:
+                case Company.SmithFoster:
+                    var code = new string(projectCode.Where(char.IsDigit).ToArray());
+                    if (!int.TryParse(code, out var projectNum))
+                        return "JPP_Shared";
 
-            if (!int.TryParse(code, out var projectNum)) return "JPP_Shared";
+                    if (projectNum >= 30000) return "JPP_30000";
 
-            return projectNum >= 20000 ? "JPP_20000" : "JPP_Shared";
+                    return projectNum >= 20000 ? "JPP_20000" : "JPP_Shared";
+
+                case Company.Geo:
+                    return "GeotechShared\\Jobs";
+
+                case Company.Surveying:
+                    return "SurveyingShared\\Jobs";
+
+                default:
+                    return "UnknownFolder";
+            }
         }
 
         private static string GetGrouping(string projectCode)
