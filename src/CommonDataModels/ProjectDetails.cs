@@ -6,6 +6,7 @@
         public string Name { get; set; }
 
         public string DeltekId { get; set; }
+        public string AnticipatedFolderPath { get; set; }
 
         public ProjectStatus Status { get; set; }
 
