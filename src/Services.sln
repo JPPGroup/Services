@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseScannerAgent", "Lice
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licenses", "Licenses", "{6231096E-0A40-43A2-8771-EA3C44D7C790}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseContext", "LicenseContext\LicenseContext.csproj", "{FF013B5E-16D4-4187-A0B3-60203E3C9C55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseContext", "LicenseContext\LicenseContext.csproj", "{FF013B5E-16D4-4187-A0B3-60203E3C9C55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseScannerPostgresqlMigrations", "LicenseScannerPostgresqlMigrations\LicenseScannerPostgresqlMigrations.csproj", "{56DD489F-D19C-4372-894A-CADE9EDAEB5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseScannerPostgresqlMigrations", "LicenseScannerPostgresqlMigrations\LicenseScannerPostgresqlMigrations.csproj", "{56DD489F-D19C-4372-894A-CADE9EDAEB5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users", "Users\Users.csproj", "{33917BE8-249E-4158-AFB7-CA1CF90158F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{56DD489F-D19C-4372-894A-CADE9EDAEB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56DD489F-D19C-4372-894A-CADE9EDAEB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56DD489F-D19C-4372-894A-CADE9EDAEB5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33917BE8-249E-4158-AFB7-CA1CF90158F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33917BE8-249E-4158-AFB7-CA1CF90158F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33917BE8-249E-4158-AFB7-CA1CF90158F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33917BE8-249E-4158-AFB7-CA1CF90158F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
