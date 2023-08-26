@@ -1,0 +1,3 @@
+[submodule "submodules/ServicesClient"]
+	path = submodules/ServicesClient
+	url = https://github.com/JPPGroup/ServicesClient.git

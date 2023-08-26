@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonDataModels\CommonDataModels.csproj" />
+    <ProjectReference Include="..\..\submodules\ServicesClient\src\CommonDataModels\CommonDataModels.csproj" />
   </ItemGroup>
 
 </Project>

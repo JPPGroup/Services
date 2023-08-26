@@ -1,11 +1,11 @@
-﻿using CommonDataModels;
+﻿using Jpp.Common.DataModels;
 using System.Data;
 
 namespace Jpp.Projects.Models
 {
     public class ProjectContactModel : BaseModel
     {
-        
+
         public string? FirstName { get { return TryGetRowValue("Forename", out var rowValue) ? (string)rowValue : null; } }
         public string? LastName { get { return TryGetRowValue("Surname", out var rowValue) ? (string)rowValue : null; } }
 
@@ -22,53 +22,53 @@ namespace Jpp.Projects.Models
             switch (roleId)
             {
                 case 12:
-                    return CommonDataModels.Role.CivilTechnician;
+                    return Jpp.Common.DataModels.Role.CivilTechnician;
 
                 case 14:
-                    return CommonDataModels.Role.ClientContact;
+                    return Jpp.Common.DataModels.Role.ClientContact;
 
                 case 21:
-                    return CommonDataModels.Role.DevelopmentPlanningTechnician;
+                    return Jpp.Common.DataModels.Role.DevelopmentPlanningTechnician;
 
                 case 35:
-                    return CommonDataModels.Role.CivilProjectLead;
+                    return Jpp.Common.DataModels.Role.CivilProjectLead;
 
                 case 52:
-                    return CommonDataModels.Role.ProjectDirector;
+                    return Jpp.Common.DataModels.Role.ProjectDirector;
 
                 case 58:
-                    return CommonDataModels.Role.DevelopmentPlanningProjectLead;
+                    return Jpp.Common.DataModels.Role.DevelopmentPlanningProjectLead;
 
                 case 54:
-                    return CommonDataModels.Role.CivilEngineer;
+                    return Jpp.Common.DataModels.Role.CivilEngineer;
 
                 case 57:
-                    return CommonDataModels.Role.DevelopmentPlanningEngineer;
+                    return Jpp.Common.DataModels.Role.DevelopmentPlanningEngineer;
 
                 case 60:
-                    return CommonDataModels.Role.SpecialProjectsTechnician;
+                    return Jpp.Common.DataModels.Role.SpecialProjectsTechnician;
 
                 case 62:
-                    return CommonDataModels.Role.SpecialProjectsEngineer;
+                    return Jpp.Common.DataModels.Role.SpecialProjectsEngineer;
 
                 case 63:
-                    return CommonDataModels.Role.SpecialProjectsProjectLead;
+                    return Jpp.Common.DataModels.Role.SpecialProjectsProjectLead;
 
                 case 64:
-                    return CommonDataModels.Role.StructuralTechnician;
+                    return Jpp.Common.DataModels.Role.StructuralTechnician;
 
                 case 65:
-                    return CommonDataModels.Role.StructuralEngineer;
+                    return Jpp.Common.DataModels.Role.StructuralEngineer;
 
                 case 67:
-                    return CommonDataModels.Role.StructuralProjectLead;
+                    return Jpp.Common.DataModels.Role.StructuralProjectLead;
 
                 case 69:
-                    return CommonDataModels.Role.ProjectOwner;
+                    return Jpp.Common.DataModels.Role.ProjectOwner;
 
                 default:
-                    return CommonDataModels.Role.Unknown;
+                    return Jpp.Common.DataModels.Role.Unknown;
             }
         }
-    }    
+    }
 }

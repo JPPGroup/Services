@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CommonDataModels;
+using Jpp.Common.DataModels;
 using Jpp.Projects;
 using Jpp.Projects.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,6 @@ using Projects.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -53,8 +52,8 @@ namespace Projects.Controllers
             {
                 projectCodes.Add(p.Code);
             }
-            
-            var invoices = await _invoiceService.ListByProjectsAsync(projectCodes, fromDate, toDate);            
+
+            var invoices = await _invoiceService.ListByProjectsAsync(projectCodes, fromDate, toDate);
 
             foreach (InvoiceModel invoice in invoices)
             {
@@ -66,15 +65,16 @@ namespace Projects.Controllers
                     {
                         yield return i;
                     }
-                } else
+                }
+                else
                 {
                     yield return i;
                 }
-            }       
-            
-            if(includedrafts)
+            }
+
+            if (includedrafts)
             {
-                var draftinvoices = await _invoiceService.ListDraftsByProjectsAsync(projectCodes, fromDate, toDate) ;
+                var draftinvoices = await _invoiceService.ListDraftsByProjectsAsync(projectCodes, fromDate, toDate);
 
                 foreach (DraftInvoiceModel invoice in draftinvoices)
                 {
@@ -97,7 +97,7 @@ namespace Projects.Controllers
                 projectCodes.Add(p.Code);
             }
 
-            var invoices = await _purchaseOrderService.ListInvoicesByProjectsAsync(projectCodes, fromDate, toDate);            
+            var invoices = await _purchaseOrderService.ListInvoicesByProjectsAsync(projectCodes, fromDate, toDate);
 
             foreach (PurchaseOrderLineInvoiceModel invoice in invoices)
             {

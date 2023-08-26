@@ -1,14 +1,10 @@
-﻿using AutoMapper;
+﻿using Jpp.Common.DataModels;
 using Microsoft.AspNetCore.Mvc;
+using Projects.Services;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Jpp.Projects.Models;
-using Jpp.Projects.Resources;
-using CommonDataModels;
-using Projects.Services;
 
 namespace Jpp.Projects.Controllers
 {

@@ -1,4 +1,4 @@
-﻿using CommonDataModels;
+﻿using Jpp.Common.DataModels;
 
 namespace Jpp.Projects.Resources
 {

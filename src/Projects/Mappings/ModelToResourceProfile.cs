@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CommonDataModels;
+using Jpp.Common.DataModels;
 using Jpp.Projects.Models;
 using Jpp.Projects.Resources;
 using Projects.Models;

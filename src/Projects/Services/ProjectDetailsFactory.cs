@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CommonDataModels;
+using Jpp.Common.DataModels;
 using Jpp.Projects;
 using Jpp.Projects.Models;
 using Microsoft.Extensions.Caching.Memory;

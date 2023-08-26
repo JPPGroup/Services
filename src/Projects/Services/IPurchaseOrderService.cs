@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Jpp.Projects.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CommonDataModels;
-using Jpp.Projects.Models;
-using Projects.Models;
 
 namespace Jpp.Projects
 {

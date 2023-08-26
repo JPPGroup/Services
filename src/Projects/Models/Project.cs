@@ -1,4 +1,4 @@
-﻿using CommonDataModels;
+﻿using Jpp.Common.DataModels;
 using System;
 using System.Data;
 
