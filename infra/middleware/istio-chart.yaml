@@ -29,6 +29,11 @@ metadata:
   name: istiod
   namespace: istio-system
 spec:
+  values:
+    pilot:
+      resources:
+        requests:
+          cpu: 100m
   chart:
     spec:
       chart: istiod
@@ -40,21 +45,3 @@ spec:
   interval: 5m0s
   dependsOn: 
     - name: istio-base
----
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-metadata:
-  name: istioinatallcustomisation
-  namespace: istio-system
-spec:
-  components:
-    pilot:
-      k8s:
-        resources:
-          requests:
-            cpu: 100m # override from default 500m
-    ingressGateways:            
-      k8s:
-        resources:
-          requests:
-            cpu: 100m # override from default 500m
