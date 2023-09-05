@@ -29,6 +29,11 @@ metadata:
   name: istiod
   namespace: istio-system
 spec:
+  values:
+    pilot:
+      resources:
+        requests:
+          cpu: 100m
   chart:
     spec:
       chart: istiod
