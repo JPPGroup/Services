@@ -43,6 +43,9 @@ spec:
 ---
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
+metadata:
+  name: istioinatallcustomisation
+  namespace: istio-system
 spec:
   components:
     pilot:
