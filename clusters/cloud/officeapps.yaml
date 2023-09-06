@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: officeapps  
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: officeapps
+  template:
+    metadata:
+      labels:
+        app: officeapps
+    spec:
+      containers:
+      - name: officeapps       
+        image: ghcr.io/jppgroup/officeappserver:2309061022
+        args: ["run"]
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80                      
+          periodSeconds: 15
+          initialDelaySeconds: 15
+        resources:
+          requests:
+            memory: "150M"
+            cpu: "0.1"
+          limits:
+            memory: "512M"
+            cpu: "1"
+      imagePullSecrets:
+      - name: githubcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: officeapps
+  namespace: default
+spec:
+  selector:
+    app: officeapps
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: officeappsroute
+  namespace: default
+spec:
+  parentRefs:
+  - name: main-gateway
+    sectionName: httpin
+    namespace: istio-system
+  hostnames:
+  - "services.cedarbarn.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /office    
+#    filters:
+#    - type: URLRewrite
+#      urlRewrite:          
+#        path:
+#          type: ReplacePrefixMatch
+          #replacePrefixMatch: /fennel
+    backendRefs:
+    - name: officeapps
+      port: 80

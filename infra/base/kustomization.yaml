@@ -4,3 +4,4 @@ resources:
   - namespaces.yaml
   - gateway-standard-install.yaml 
   - upgradeschema.yaml
+  - githubcred.yaml
