@@ -53,7 +53,8 @@ spec:
     sectionName: httpin
     namespace: istio-system
   hostnames:
-  - "services.cedarbarn.local"
+  - "services.jppuk.net"
+  - "jppcloud.uksouth.cloudapp.azure.com"
   rules:
   - matches:
     - path:
