@@ -19,12 +19,6 @@ spec:
         args: ["run"]
         ports:
         - containerPort: 80
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 80                      
-          periodSeconds: 15
-          initialDelaySeconds: 15
         resources:
           requests:
             memory: "150M"
