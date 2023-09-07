@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - namespaces.yaml
   - gateway-standard-install.yaml   
+  - githubcred.yaml
