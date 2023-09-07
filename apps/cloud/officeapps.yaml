@@ -18,7 +18,7 @@ spec:
         image: ghcr.io/jppgroup/officeappserver:2309061022
         args: ["run"]
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         resources:
           requests:
             memory: "150M"
@@ -39,8 +39,8 @@ spec:
     app: officeapps
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
@@ -68,4 +68,4 @@ spec:
           #replacePrefixMatch: /fennel
     backendRefs:
     - name: officeapps
-      port: 80
+      port: 8080
