@@ -17,4 +17,4 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az aks start --name Cloud --resource-group CloudCluster
+            az aks start --name Cloud --resource-group CloudCluster --no-wait

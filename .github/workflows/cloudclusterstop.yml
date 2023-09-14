@@ -1,11 +1,11 @@
-name: Start AKS Cloud Cluster
+name: Stop AKS Cloud Cluster
 on:
   schedule:
     - cron: '30 18 * * 1-5'
   workflow_dispatch:
 
 jobs:
-  Start:
+  Stop:
     runs-on: ubuntu-latest
     steps:      
       - name: Log in with Azure
@@ -17,4 +17,4 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az aks stop --name Cloud --resource-group CloudCluster
+            az aks stop --name Cloud --resource-group CloudCluster --no-wait
