@@ -1,7 +1,9 @@
+using Jpp.Projects.MailAI;
 using Jpp.Projects.Mappings;
 using Jpp.Projects.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +27,11 @@ namespace Jpp.Projects
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<MailDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration["ConnectionStrings:Mail"], x => x.MigrationsHistoryTable("__MyMigrationsHistory", "MailAI"));
+            });
+
             services.AddSingleton<IProjectService, ProjectService>();
             services.AddSingleton<IInvoiceService, InvoiceService>();
             services.AddSingleton<IProjectContactService, ProjectContactService>();
