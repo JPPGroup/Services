@@ -41,8 +41,8 @@ spec:
           password: Wh97G@3!pCeA
           database: aspnet-ProjectManager
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
 metadata:
   name: postgresqlroute
   namespace: default
@@ -54,6 +54,6 @@ spec:
   hostnames:
   - "services.cedarbarn.local"
   rules:
-    backendRefs:
+  - backendRefs:
     - name: postgresql
       port: 5432
