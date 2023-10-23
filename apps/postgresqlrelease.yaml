@@ -50,9 +50,7 @@ spec:
   parentRefs:
   - name: main-gateway
     sectionName: postgresql
-    namespace: istio-system
-  hostnames:
-  - "services.cedarbarn.local"
+    namespace: istio-system  
   rules:
   - backendRefs:
     - name: postgresql
