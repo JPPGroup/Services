@@ -29,7 +29,8 @@ namespace Jpp.Projects
         {
             services.AddDbContext<MailDbContext>(options =>
             {
-                options.UseSqlServer(Configuration["ConnectionStrings:Mail"], x => x.MigrationsHistoryTable("__MyMigrationsHistory", "MailAI"));
+                //options.UseSqlServer(Configuration["ConnectionStrings:Mail"], x => x.MigrationsHistoryTable("__MyMigrationsHistory", "MailAI"));
+                options.UseNpgsql(Configuration["ConnectionStrings:Mail"], x => x.MigrationsHistoryTable("__MyMigrationsHistory", "MailAI"));
             });
 
             services.AddSingleton<IProjectService, ProjectService>();
@@ -50,6 +51,7 @@ namespace Jpp.Projects
             services.AddMemoryCache();
             string sqlConnectionString = Configuration.GetConnectionString("PIM");
             services.AddHealthChecks().AddSqlServer(sqlConnectionString);
+            services.AddHealthChecks().AddNpgSql(Configuration["ConnectionStrings:Mail"]);
             services.AddApplicationInsightsTelemetry();
             services.AddRouting(o =>
             {

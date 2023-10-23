@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: projects       
-        image: ghcr.io/jppgroup/projects:0.6.1
+        image: ghcr.io/jppgroup/projects:0.6.2
         args: ["run"]
         ports:
         - containerPort: 80
