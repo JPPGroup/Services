@@ -55,3 +55,28 @@ spec:
   - backendRefs:
     - name: postgresql
       port: 5432
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgresqlbackup
+  namespace: default
+spec:
+  schedule: "30 18 * * 0-5"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: dbbackup
+            image: ghcr.io/jppgroup/dbbackup:1.0.0
+            imagePullPolicy: IfNotPresent          
+            env:
+            - name: PGPASSWORD
+              value: "Is92n$8&z^EI"
+            - name: PGPORT
+              value: "5432"  
+            - name: PGHOST
+              value: "postgresql"  
+            - name: CONTAINER
+              value: "https://jppcdnstorage.blob.core.windows.net/backups?sv=2021-10-04&st=2023-10-29T22%3A33%3A04Z&se=2033-10-30T22%3A33%3A00Z&sr=c&sp=racwl&sig=P%2BBJoo8t98CDCU8TuxkXUFJhatYNqckvxw4y7v%2FafNI%3D"  
