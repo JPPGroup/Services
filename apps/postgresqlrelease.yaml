@@ -66,9 +66,12 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            sidecar.istio.io/inject: "false"
         spec:
           containers:
-          - name: dbbackup
+          - name: dbbackup            
             image: ghcr.io/jppgroup/dbbackup:1.0.0
             imagePullPolicy: IfNotPresent          
             env:
