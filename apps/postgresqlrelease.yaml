@@ -80,3 +80,4 @@ spec:
               value: "postgresql"  
             - name: CONTAINER
               value: "https://jppcdnstorage.blob.core.windows.net/backups?sv=2021-10-04&st=2023-10-29T22%3A33%3A04Z&se=2033-10-30T22%3A33%3A00Z&sr=c&sp=racwl&sig=P%2BBJoo8t98CDCU8TuxkXUFJhatYNqckvxw4y7v%2FafNI%3D"  
+          restartPolicy: Never
