@@ -24,3 +24,14 @@ spec:
     allowedRoutes:
       namespaces:
         from: All
+  - name: https
+    hostname: "services.cedarbarn.local"
+    port: 443
+    protocol: HTTPS
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: sslcert
+    allowedRoutes:
+      namespaces:        
+        from: All
