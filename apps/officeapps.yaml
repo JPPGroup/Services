@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: officeapps  
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: officeapps
+  template:
+    metadata:
+      labels:
+        app: officeapps
+    spec:
+      containers:
+      - name: officeapps       
+        image: ghcr.io/jppgroup/officeappserver:2309061022
+        args: ["run"]
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "150M"
+            cpu: "0.05"
+          limits:
+            memory: "512M"
+            cpu: "1"
+      imagePullSecrets:
+      - name: githubcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: officeapps
+  namespace: default
+spec:
+  selector:
+    app: officeapps
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: officeappsroute
+  namespace: default
+spec:
+  parentRefs:
+  - name: main-gateway
+    sectionName: https
+    namespace: istio-system
+  #hostnames:
+  #- "services.jppuk.net"
+  #- "jppcloud.uksouth.cloudapp.azure.com"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /office    
+#    filters:
+#    - type: URLRewrite
+#      urlRewrite:          
+#        path:
+#          type: ReplacePrefixMatch
+          #replacePrefixMatch: /fennel
+    backendRefs:
+    - name: officeapps
+      port: 8080
