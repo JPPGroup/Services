@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: officeapps       
-        image: ghcr.io/jppgroup/officeappserver:2311240350
+        image: ghcr.io/jppgroup/officeappserver:2311240350 # {"$imagepolicy": "default:officeappsimagepolicy"}
         args: ["run"]
         ports:
         - containerPort: 8080
@@ -69,3 +69,26 @@ spec:
     backendRefs:
     - name: officeapps
       port: 8080
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: officeappsimagerepo
+  namespace: default
+spec:
+  image: ghcr.io/jppgroup/officeappserver
+  interval: 5m  
+  secretRef:
+    name: githubcred
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: officeappsimagepolicy
+  namespace: default
+spec:
+  imageRepositoryRef:
+    name: officeappsimagerepo
+  policy:
+    numerical:
+      order: asc
