@@ -11,7 +11,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: githubcred  
-  namespace: kube-system
+  namespace: flux-system
 data:
   .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2doY3IuaW8iOnsidXNlcm5hbWUiOiJKUFBHcm91cCIsInBhc3N3b3JkIjoiZ2hwX2tDRGxYdXJON1hmWW0ydnhWYm1rOFNabWFTdHV1NjJpTjhUeiIsImF1dGgiOiJTbEJRUjNKdmRYQTZaMmh3WDJ0RFJHeFlkWEpPTjFobVdXMHlkbmhXWW0xck9GTmFiV0ZUZEhWMU5qSnBUamhVZWc9PSJ9fX0=
 type: kubernetes.io/dockerconfigjson
