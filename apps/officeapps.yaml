@@ -89,6 +89,9 @@ metadata:
 spec:
   imageRepositoryRef:
     name: officeappsimagerepo
+  filterTags:
+    pattern: '(?P<ts>[0-9]+)'
+    extract: '$ts'
   policy:
     numerical:
       order: asc
