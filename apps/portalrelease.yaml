@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: portal
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: portal
+      version: '>=0.1.0'
+      sourceRef:
+        kind: HelmRepository
+        name: jpphelmrepo
+        namespace: default
+      interval: 5m
+  install:
+    remediation:
+      retries: 2
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+  dependsOn:
+    - name: traefik
+#  values:
+    #projects:
+      #imageVersion: 0.4.2

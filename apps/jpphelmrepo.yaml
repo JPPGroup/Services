@@ -7,3 +7,5 @@ spec:
   type: oci
   interval: 5m0s
   url: oci://ghcr.io/jppgroup
+  secretRef:
+    name: githubcred
