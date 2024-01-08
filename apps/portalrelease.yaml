@@ -21,8 +21,6 @@ spec:
     remediation:
       retries: 3
       remediateLastFailure: true
-  dependsOn:
-    - name: traefik
 #  values:
     #projects:
       #imageVersion: 0.4.2
