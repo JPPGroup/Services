@@ -42,7 +42,7 @@ spec:
     tls:
       mode: Terminate
       certificateRefs:
-      - name: sslcert
+      - name: wildcardsslcert
     allowedRoutes:
       namespaces:        
         from: All
