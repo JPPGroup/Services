@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: officeapps  
+  name: officeapps
   namespace: default
 spec:
   replicas: 1
@@ -14,8 +14,8 @@ spec:
         app: officeapps
     spec:
       containers:
-      - name: officeapps       
-        image: ghcr.io/jppgroup/officeappserver:2311240350 # {"$imagepolicy": "flux-system:officeappsimagepolicy"}
+      - name: officeapps
+        image: ghcr.io/jppgroup/officeappserver:2405210906 # {"$imagepolicy": "flux-system:officeappsimagepolicy"}
         args: ["run"]
         ports:
         - containerPort: 8080
@@ -59,13 +59,13 @@ spec:
   - matches:
     - path:
         type: PathPrefix
-        value: /office    
-#    filters:
-#    - type: URLRewrite
-#      urlRewrite:          
-#        path:
-#          type: ReplacePrefixMatch
-          #replacePrefixMatch: /fennel
+        value: /office
+        #    filters:
+        #    - type: URLRewrite
+        #      urlRewrite:          
+        #        path:
+        #          type: ReplacePrefixMatch
+        #replacePrefixMatch: /fennel
     backendRefs:
     - name: officeapps
       port: 8080
@@ -77,7 +77,7 @@ metadata:
   namespace: flux-system
 spec:
   image: ghcr.io/jppgroup/officeappserver
-  interval: 5m  
+  interval: 5m
   secretRef:
     name: githubcred
 ---
