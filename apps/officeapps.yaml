@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: officeapps
-        image: ghcr.io/jppgroup/officeappserver:2405210906 # {"$imagepolicy": "flux-system:officeappsimagepolicy"}
+        image: ghcr.io/jppgroup/officeappserver:2405230932 # {"$imagepolicy": "flux-system:officeappsimagepolicy"}
         args: ["run"]
         ports:
         - containerPort: 8080
